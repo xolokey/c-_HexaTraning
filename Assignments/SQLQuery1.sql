@@ -22,4 +22,4 @@ create database TestDB1
 create table AlterDB.dbo.Student(
 id INT IDENTIFY PRIMARY KEY,
 Name LOKEY(21)NOT NULL
-
+create
