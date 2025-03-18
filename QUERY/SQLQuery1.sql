@@ -1,3 +1,6 @@
+--DATE 18/3/25
+
+
 use AlterDB
 create table trainee
 (
