@@ -108,3 +108,5 @@ foreign key (teacher_id) references teacher(teacher_id) on delete set null
  ('data science','1'),
  ('ai','2'),
  ('ml','2');
+
+ --new
