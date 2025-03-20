@@ -1,4 +1,5 @@
 use SISDB
+--TASK 1 STUDENT INFORMATION SYSTEM
 
 -- student table
 create table Students
@@ -31,12 +32,12 @@ foreign key (teacher_id) references teacher(teacher_id) on delete set null
 --parent 
  create table enrollment
  (
- enrollement_id int identity(300,1) primary key not null,
+ enrollment_id int identity(300,1) primary key not null,
  student_id int,
  course_id int,
- enrollement_date int,
- --foreign key (student_id) references students(student_id) on delete cascade,
- --foreign key (course_id) references courses(course_id) on delete cascade,
+ enrollment_date date not null,
+ foreign key (student_id) references students(student_id) on delete set null,
+ foreign key (course_id) references courses(course_id) on delete set null,
  );
 
 
@@ -56,8 +57,8 @@ foreign key (teacher_id) references teacher(teacher_id) on delete set null
  payment_id int identity(500,1) primary key not null,
  student_id int,
  amount int,
- payment_date int,
- --foreign key(student_id) references students(student_id) on delete cascade,
+ payment_date date not null,
+ foreign key(student_id) references students(student_id) on delete set null,
  );
 
 
@@ -95,7 +96,7 @@ foreign key (teacher_id) references teacher(teacher_id) on delete set null
 
  select* from teacher
 
- --completed table teacher students
+ --completed table teacher students courses
  --inserting values to courses
  insert into courses (course_name,credits) values
  ('c','1'),
@@ -109,4 +110,40 @@ foreign key (teacher_id) references teacher(teacher_id) on delete set null
  ('ai','2'),
  ('ml','2');
 
- --new
+ select*from courses
+
+ --inserting values to enrolements
+ insert into enrollment (enrollment_date) values
+ ('2023-09-23'),
+ ('2023-08-12'),
+ ('2023-08-14'),
+ ('2024-01-12'),
+ ('2024-01-27'),
+ ('2024-02-01'),
+ ('2024-02-21'),
+ ('2024-03-01'),
+ ('2024-03-13'),
+ ('2024-03-21');
+
+ delete from enrollment
+ where enrollment_id= 1310;  --'1303',1304,1305,1306,1307,1308,1309,1310;
+
+ select * from enrollment
+
+ --inserting values to payments
+
+ insert into payments(amount,payment_date) values
+ ('10000','2023-09-22'),
+ ('12000','2023-08-11'),
+ ('5000','2023-08-13'),
+ ('15000','2024-01-10'),
+ ('13000','2024-01-25'),
+ ('10000','2024-02-02'),
+ ('15000','2024-02-20'),
+ ('16000','2024-03-13'),
+ ('15000','2024-03-12'),
+ ('12000','2024-03-20');
+
+ select* from payments
+
+ --Task 1 Completed
