@@ -96,6 +96,8 @@ foreign key (teacher_id) references teacher(teacher_id) on delete set null
 
  select* from teacher
 
+ delete from teacher where teacher_id = (SELECT max(419) FROM teacher);
+
  --completed table teacher students courses
  --inserting values to courses
  insert into courses (course_name,credits) values
