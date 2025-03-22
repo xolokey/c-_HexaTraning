@@ -10,6 +10,8 @@ namespace firstconsoleapp
     {
         static void Main(string[] args)
         {
+            Console.WriteLine("hi therer");
+            Console.ReadLine();
         }
     }
 }
