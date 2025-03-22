@@ -55,14 +55,14 @@ from teacher t
 join courses c on t.teacher_id=c.teacher_id
 order by t.first_name , t.last_name;
 
---(6)list of students and their enrollment date with specific course(error)
+--(6)list of students and their enrollment date with specific course
 
 select s.first_name,s.last_name,e.enrollment_date,c.course_name
 from Students s
-join enrollment e on s.date_of_birth=e.student_id
+join enrollment e on s.student_id=e.student_id
 join courses c on e.course_id=c.course_id
-where c.course_id= 201
-order by e.enrollment_date;
+group by c.course_name,e.enrollment_date,s.first_name,s.last_name
+order by e.enrollment_date asc;
 
 --(7)name of the students not made any payments
 
