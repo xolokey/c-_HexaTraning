@@ -171,11 +171,10 @@ select* from ExhibitionArtworks
 select* from Artworks
 select* from Exhibitions
 
-
-select ar.Title
-from Artworks ar
-left join ExhibitionArtworks e on ar.ArtworkID=ar.ArtworkID
-where e.ArtworkID is null;
+Select a.ArtworkID, a.Title, a.ArtistID, a.CategoryID, a.Year, a.Description
+from Artworks a
+left join ExhibitionArtworks ea on a.ArtworkID = ea.ArtworkID
+where ea.ExhibitionID is null;
 
 --12 artist created artwork in all avilable catagories
 
