@@ -12,6 +12,7 @@ namespace C__CONSOLE
         {
             Console.WriteLine("Hello World!");
             Console.Readline();
+            // This is a comment
         }
     }
 }
