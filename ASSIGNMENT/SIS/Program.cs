@@ -1,4 +1,4 @@
-﻿using System;  
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,7 +17,7 @@ namespace StudentInformationSystem
         public DateOnly DateofBirth { get; set; }
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
-        
+
     }
 
     public class Course
@@ -42,7 +42,7 @@ namespace StudentInformationSystem
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
-        
+
     }
 
     public class Payment
@@ -54,51 +54,52 @@ namespace StudentInformationSystem
     }
     //TASK 1---------------COMPLETED--------------------
     //TASK 2: CONSTRUCTOR IMPLEMENTTION
-    
-    public class program
+
+    public class Program
     {
         static void Main(string[] args)
         {
             //Creating a student
-            Student student1 = new Student {
-                student1.StudentID = 10,
-                student1.FirstName = "sanjay",
-                student1.LastName = "kumar",
-                student1.DateofBirth = new DateOnly(2004, 5, 15),
-                student1.Email = "sanjaykuma@gmail.com",
-                student1.PhoneNumber = "876578901"
+            Student student1 = new Student
+            {
+                StudentID = 101,
+                FirstName = "sanjay",
+                LastName = "kumar",
+                DateofBirth = new DateOnly(2004, 5, 15),
+                Email = "sanjaykuma@gmail.com",
+                PhoneNumber = "876578901"
             };
             //Creating a course
             Course course1 = new Course
             {
-                course1.CourseID = 201,
-                course1.CourseName = "C# Programming",
-                course1.CourseCode = 101,
-                course1.InstructorName = "Newtorn"
+                CourseID = 201,
+                CourseName = "C# Programming",
+                CourseCode = 101,
+                InstructorName = "Newtorn"
             };
             //Creating an enrollment
             Enrollment enrollment1 = new Enrollment
             {
-                enrollment1.EnrollmentID = 301,
-                enrollment1.StudentID = student1,
-                enrollment1.CourseID = course1,
-                enrollment1.EnrollmentDate = DateTime.Now
+                EnrollmentID = 301,
+                StudentID = student1,
+                CourseID = course1,
+               EnrollmentDate = DateTime.Now
             };
             //Creating a teacher
             Teacher teacher1 = new Teacher
             {
-                teacher1.TeacherID = 401,
-                teacher1.FirstName = "Newtorn",
-                teacher1.LastName = "Dony",
-                teacher1.Email = "newtorn@gmail.com"
+                TeacherID = 401,
+                FirstName = "Newtorn",
+                LastName = "Dony",
+                Email = "newtorn@gmail.com"
             };
             //Creating a payment
             Payment payment1 = new Payment
             {
-                payment1.PaymentID = 501,
-                payment1.StudentID = student1,
-                payment1.Amount = 5000.00m,
-                payment1.PaymentDate = DateTime.Now
+                PaymentID = 501,
+                StudentID = student1,
+                Amount = 5000.00m,
+                PaymentDate = DateTime.Now
             };
             //Display Details
             Console.WriteLine("Student Details:");
@@ -106,11 +107,11 @@ namespace StudentInformationSystem
             Console.WriteLine("Course Details:");
             Console.WriteLine($"ID: {course1.CourseID}, Name: {course1.CourseName}, Code: {course1.CourseCode}, Instructor: {course1.InstructorName}");
             Console.WriteLine("Enrollment Details:");
-            Console.WriteLine($"ID: {enrollment1.EnrollmentID}, Student: {enrollment1.StudentID.FirstName} {enrollment1.StudentID.LastName}, Course: {enrollment1.CourseID.CourseName}, Date: {enrollment1.EnrollmentDate}");
+            Console.WriteLine($"ID: {enrollment1.EnrollmentID}, Student: {student1.StudentID}, Course: {course1.CourseID}, Date: {enrollment1.EnrollmentDate}");
             Console.WriteLine("Teacher Details:");
             Console.WriteLine($"ID: {teacher1.TeacherID}, Name: {teacher1.FirstName} {teacher1.LastName}, Email: {teacher1.Email}");
             Console.WriteLine("Payment Details:");
-            Console.WriteLine($"ID: {payment1.PaymentID}, Student: {payment1.StudentID.FirstName} {payment1.StudentID.LastName}, Amount: {payment1.Amount}, Date: {payment1.PaymentDate}");
+            Console.WriteLine($"ID: {payment1.PaymentID}, Student: {student1.StudentID}, Amount: {payment1.Amount}, Date: {payment1.PaymentDate}");
             Console.ReadLine();
             //TASK 2---------------COMPLETED--------------------
 
