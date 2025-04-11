@@ -1,253 +1,270 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Globalization;
-using System.Collections;
-
-
 
 namespace StudentInformationSystem
-{//TASK 1 (CREATE CLASS)
+{
+    // Custom Exceptions
+    public class DuplicateEnrollmentException : Exception { public DuplicateEnrollmentException(string message) : base(message) { } }
+    public class CourseNotFoundException : Exception { public CourseNotFoundException(string message) : base(message) { } }
+    public class StudentNotFoundException : Exception { public StudentNotFoundException(string message) : base(message) { } }
+    public class TeacherNotFoundException : Exception { public TeacherNotFoundException(string message) : base(message) { } }
+    public class PaymentValidationException : Exception { public PaymentValidationException(string message) : base(message) { } }
+    public class InvalidStudentDataException : Exception { public InvalidStudentDataException(string message) : base(message) { } }
+    public class InvalidCourseDataException : Exception { public InvalidCourseDataException(string message) : base(message) { } }
+    public class InvalidEnrollmentDataException : Exception { public InvalidEnrollmentDataException(string message) : base(message) { } }
+    public class InvalidTeacherDataException : Exception { public InvalidTeacherDataException(string message) : base(message) { } }
+    public class InsufficientFundsException : Exception { public InsufficientFundsException(string message) : base(message) { } }
+
+    // Student Class
     public class Student
     {
         public int StudentID { get; set; }
         public string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
-        public DateOnly DateofBirth { get; set; }
+        public DateTime DateOfBirth { get; set; }
         public string Email { get; set; } = string.Empty;
         public string PhoneNumber { get; set; } = string.Empty;
 
-        public void EnrollinCourse(Course course)
+        private List<Enrollment> enrollments = new List<Enrollment>();
+        private List<Payment> payments = new List<Payment>();
+
+        public void EnrollInCourse(Course course)
         {
-            // Implementation for enrolling in a course
+            if (enrollments.Any(e => e.CourseID == course.CourseID))
+                throw new DuplicateEnrollmentException("Student is already enrolled in this course.");
+
             var enrollment = new Enrollment
             {
-                EnrollmentID = new Random().Next(1000, 9999), // Random ID for demonstration
+                EnrollmentID = new Random().Next(1000, 9999),
                 StudentID = this.StudentID,
-                CourseID = course,
+                CourseID = course.CourseID,
                 EnrollmentDate = DateTime.Now
             };
             enrollments.Add(enrollment);
-            course.Add(enrollment);
-            //Console.WriteLine($"{FirstName} {LastName} has enrolled in {course.CourseName}");
+            course.AddEnrollment(enrollment);
         }
 
-        public void UpdateStudentIno(string firstName, string lastName, DateOnly dateofBirth, string email, string phoneNumber)
+        public void UpdateStudentInfo(string firstName, string lastName, DateTime dateOfBirth, string email, string phoneNumber)
         {
+            if (dateOfBirth > DateTime.Now || !email.Contains("@"))
+                throw new InvalidStudentDataException("Invalid student data provided.");
+
             FirstName = firstName;
             LastName = lastName;
-            DateofBirth = dateofBirth;
+            DateOfBirth = dateOfBirth;
             Email = email;
             PhoneNumber = phoneNumber;
         }
 
         public void MakePayment(decimal amount, DateTime paymentDate)
         {
-            // Implementation for making a payment
-            var payment = new Payment
-            {
-                PaymentID = new Random().Next(1000, 9999), // Random ID for demonstration
-                StudentID = this.StudentID,
-                Amount = amount,
-                PaymentDate = paymentDate
-            };
-            payments.Add(payment);
+            if (amount <= 0 || paymentDate > DateTime.Now)
+                throw new PaymentValidationException("Invalid payment amount or date.");
+
+            payments.Add(new Payment { PaymentID = new Random().Next(1000, 9999), Student = this, Amount = amount, PaymentDate = paymentDate });
         }
 
-        public void DisplayStudentDetails()
+        public void DisplayStudentInfo()
         {
-            Console.WriteLine($"Student ID: {StudentID}, Name: {FirstName} {LastName}, DOB: {DateofBirth}, Email: {Email}, Phone: {PhoneNumber}");
+            Console.WriteLine($"ID: {StudentID}, Name: {FirstName} {LastName}, DOB: {DateOfBirth.ToShortDateString()}, Email: {Email}, Phone: {PhoneNumber}");
         }
-        public List<Enrollment> GetEnrollments() => enrollments;
 
+        public List<Enrollment> GetEnrolledCourses() => enrollments;
         public List<Payment> GetPaymentHistory() => payments;
-
-
     }
 
+    // Course Class
     public class Course
     {
         public int CourseID { get; set; }
         public string CourseName { get; set; } = string.Empty;
-        public int CourseCode { get; set; }
+        public string CourseCode { get; set; } = string.Empty;
         public string InstructorName { get; set; } = string.Empty;
         public Teacher AssignedTeacher { get; set; }
 
-        public List<Enrollment> Enrollments = new();
+        private List<Enrollment> enrollments = new List<Enrollment>();
 
         public void AssignTeacher(Teacher teacher)
         {
+            if (teacher == null)
+                throw new TeacherNotFoundException("Teacher not found.");
+
             AssignedTeacher = teacher;
-            teacher.AssignedCourse = this;
+            teacher.AddAssignedCourse(this);
         }
 
-        public void UpdateCourseDetails(string courseName, int courseCode, string instructorName)
+        public void UpdateCourseInfo(string courseCode, string courseName, string instructor)
         {
-            CourseName = courseName;
+            if (string.IsNullOrWhiteSpace(courseCode) || string.IsNullOrWhiteSpace(instructor))
+                throw new InvalidCourseDataException("Invalid course data.");
+
             CourseCode = courseCode;
-            InstructorName = instructorName;
+            CourseName = courseName;
+            InstructorName = instructor;
         }
 
-        public void DisplayCourseDetails()
+        public void DisplayCourseInfo()
         {
-            Console.WriteLine($"Course ID: {CourseID}, Name: {CourseName}, Code: {CourseCode}, Instructor: {InstructorName}");
+            Console.WriteLine($"Course ID: {CourseID}, Code: {CourseCode}, Name: {CourseName}, Instructor: {InstructorName}");
         }
 
-        public List<Enrollment> GetEnrollments()=> Enrollments;
-        public Teacher GetAssignedTeacher() => AssignedTeacher;
-
-        public void Add(Enrollment enrollment)
-        {
-            Enrollments.Add(enrollment);
-        }
-
-        public int GetTotalEnrollments() => Enrollments.Count;
+        public List<Enrollment> GetEnrollments() => enrollments;
+        public Teacher GetTeacher() => AssignedTeacher;
+        public void AddEnrollment(Enrollment enrollment) => enrollments.Add(enrollment);
+        public int GetTotalEnrollments() => enrollments.Count;
 
         public decimal GetTotalPayments(List<Student> students)
         {
-            returm Enrolments.Sum(e => e.GetStudent(students)?.GetPaymentHistory().Sum(p=>p.Amount)??0);
-        }  
-
-
+            return enrollments.Sum(e => e.GetStudent(students)?.GetPaymentHistory().Sum(p => p.Amount) ?? 0);
+        }
     }
 
+    // Enrollment Class
     public class Enrollment
     {
         public int EnrollmentID { get; set; }
-        public Student StudentID { get; set; }
-        public Course CourseID { get; set; }
+        public int StudentID { get; set; }
+        public int CourseID { get; set; }
         public DateTime EnrollmentDate { get; set; }
 
         public Student GetStudent(List<Student> students) => students.FirstOrDefault(s => s.StudentID == StudentID);
-
         public Course GetCourse(List<Course> courses) => courses.FirstOrDefault(c => c.CourseID == CourseID);
     }
 
+    // Teacher Class
     public class Teacher
     {
         public int TeacherID { get; set; }
-        public string FirstName { get; set; }=string.Empty;
-        public string LastName { get; set; }= string.Empty;
+        public string FirstName { get; set; } = string.Empty;
+        public string LastName { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
-        private List<Course> assignedCourses = new();
+        private List<Course> assignedCourses = new List<Course>();
 
-        public void UpdateTeacherDetails(string firstName, string lastName, string email)
+        public void UpdateTeacherInfo(string firstName, string lastName, string email)
         {
+            if (string.IsNullOrWhiteSpace(firstName) || string.IsNullOrWhiteSpace(email))
+                throw new InvalidTeacherDataException("Invalid teacher data.");
+
             FirstName = firstName;
             LastName = lastName;
             Email = email;
         }
 
-        public void DisplayTeacherDetails()
+        public void DisplayTeacherInfo()
         {
-            Console.WriteLine($"Teacher ID: {TeacherID}, Name: {FirstName} {LastName}, Email: {Email}");
+            Console.WriteLine($"ID: {TeacherID}, Name: {FirstName} {LastName}, Email: {Email}");
         }
 
         public List<Course> GetAssignedCourses() => assignedCourses;
-
-        public void AddAssignedCourse(Course course)
-        {
-            assignedCourses.Add(course);
-        }
-
-
+        public void AddAssignedCourse(Course course) => assignedCourses.Add(course);
     }
 
+    // Payment Class
     public class Payment
     {
         public int PaymentID { get; set; }
-        public Student StudentID { get; set; }
+        public Student Student { get; set; }
         public decimal Amount { get; set; }
         public DateTime PaymentDate { get; set; }
 
-        public Student GetStudent()=> student;
+        public Student GetStudent() => Student;
         public decimal GetPaymentAmount() => Amount;
         public DateTime GetPaymentDate() => PaymentDate;
     }
-    //TASK 1---------------COMPLETED--------------------
-    //TASK 2: CONSTRUCTOR IMPLEMENTTION
 
-    public class Program
+    // SIS Class
+    public class SIS
+    {
+        private List<Student> allStudents = new List<Student>();
+        private List<Course> allCourses = new List<Course>();
+        private List<Teacher> allTeachers = new List<Teacher>();
+
+        public void EnrollStudentInCourse(Student student, Course course)
+        {
+            if (student == null) throw new StudentNotFoundException("Student not found.");
+            if (course == null) throw new CourseNotFoundException("Course not found.");
+
+            student.EnrollInCourse(course);
+            if (!allStudents.Contains(student))
+                allStudents.Add(student);
+        }
+
+        public void AssignTeacherToCourse(Teacher teacher, Course course)
+        {
+            if (teacher == null) throw new TeacherNotFoundException("Teacher not found.");
+            if (course == null) throw new CourseNotFoundException("Course not found.");
+
+            course.AssignTeacher(teacher);
+        }
+
+        public void RecordPayment(Student student, decimal amount, DateTime paymentDate)
+        {
+            if (student == null) throw new StudentNotFoundException("Student not found.");
+            student.MakePayment(amount, paymentDate);
+        }
+
+        public void GenerateEnrollmentReport(Course course)
+        {
+            Console.WriteLine($"\nEnrollment Report for {course.CourseName}:");
+            foreach (var enrollment in course.GetEnrollments())
+            {
+                Console.WriteLine($"Enrollment ID: {enrollment.EnrollmentID}, Student ID: {enrollment.StudentID}, Date: {enrollment.EnrollmentDate}");
+            }
+        }
+
+        public void GeneratePaymentReport(Student student)
+        {
+            Console.WriteLine($"\nPayment Report for {student.FirstName} {student.LastName}:");
+            foreach (var payment in student.GetPaymentHistory())
+            {
+                Console.WriteLine($"Payment ID: {payment.PaymentID}, Amount: {payment.Amount}, Date: {payment.PaymentDate}");
+            }
+        }
+
+        public void CalculateCourseStatistics(Course course)
+        {
+            var totalEnrollments = course.GetTotalEnrollments();
+            var totalPayments = course.GetTotalPayments(allStudents);
+            Console.WriteLine($"\nCourse Statistics for {course.CourseName}:");
+            Console.WriteLine($"Total Enrollments: {totalEnrollments}");
+            Console.WriteLine($"Total Payments: {totalPayments:C}");
+        }
+
+        public List<Enrollment> GetEnrollmentsForStudent(Student student) => student.GetEnrolledCourses();
+        public List<Course> GetCoursesForTeacher(Teacher teacher) => teacher.GetAssignedCourses();
+    }
+
+    class Program
     {
         static void Main(string[] args)
         {
-            //Creating a student
-            Student student1 = new Student
+            try
             {
-                StudentID = 101,
-                FirstName = "sanjay",
-                LastName = "kumar",
-                DateofBirth = new DateOnly(2004, 5, 15),
-                Email = "sanjaykuma@gmail.com",
-                PhoneNumber = "876578901"
-            };
-            //Creating a course
-            Course course1 = new Course
+                Student student1 = new Student { StudentID = 1, FirstName = "John", LastName = "Doe", DateOfBirth = new DateTime(2000, 5, 15), Email = "john.doe@example.com", PhoneNumber = "123-456-7890" };
+                Course course1 = new Course { CourseID = 101, CourseName = "Intro to C#", CourseCode = "CS101", InstructorName = "Dr. Smith" };
+                Teacher teacher1 = new Teacher { TeacherID = 201, FirstName = "Sarah", LastName = "Connor", Email = "sarah.connor@example.com" };
+
+                SIS sis = new SIS();
+
+                sis.EnrollStudentInCourse(student1, course1);
+                sis.AssignTeacherToCourse(teacher1, course1);
+                sis.RecordPayment(student1, 500.00m, DateTime.Now);
+
+                student1.DisplayStudentInfo();
+                course1.DisplayCourseInfo();
+                teacher1.DisplayTeacherInfo();
+
+                sis.GenerateEnrollmentReport(course1);
+                sis.GeneratePaymentReport(student1);
+                sis.CalculateCourseStatistics(course1);
+            }
+            catch (Exception ex)
             {
-                CourseID = 201,
-                CourseName = "C# Programming",
-                CourseCode = 101,
-                InstructorName = "Newtorn"
-            };
-            //Creating an enrollment
-            Enrollment enrollment1 = new Enrollment
-            {
-                EnrollmentID = 301,
-                StudentID = student1,
-                CourseID = course1,
-               EnrollmentDate = DateTime.Now
-            };
-            //Creating a teacher
-            Teacher teacher1 = new Teacher
-            {
-                TeacherID = 401,
-                FirstName = "Newtorn",
-                LastName = "Dony",
-                Email = "newtorn@gmail.com"
-            };
-            // Creating a payment
-            Payment payment1 = new Payment
-            {
-            
-                PaymentID = 501,
-                StudentID = student1,
-                Amount = 5000.00m,
-                PaymentDate = DateTime.Now
-            };
-            //Display Details
-            Console.WriteLine("Student Details:");
-            Console.WriteLine($"ID: {student1.StudentID}, Name: {student1.FirstName} {student1.LastName}, DOB: {student1.DateofBirth}, Email: {student1.Email}, Phone: {student1.PhoneNumber}");
-            Console.WriteLine("Course Details:");
-            Console.WriteLine($"ID: {course1.CourseID}, Name: {course1.CourseName}, Code: {course1.CourseCode}, Instructor: {course1.InstructorName}");
-            Console.WriteLine("Enrollment Details:");
-            Console.WriteLine($"ID: {enrollment1.EnrollmentID}, Student: {student1.StudentID}, Course: {course1.CourseID}, Date: {enrollment1.EnrollmentDate}");
-            Console.WriteLine("Teacher Details:");
-            Console.WriteLine($"ID: {teacher1.TeacherID}, Name: {teacher1.FirstName} {teacher1.LastName}, Email: {teacher1.Email}");
-            Console.WriteLine("Payment Details:");
-            Console.WriteLine($"ID: {payment1.PaymentID}, Student: {student1.StudentID}, Amount: {payment1.Amount}, Date: {payment1.PaymentDate}");
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+
             Console.ReadLine();
-
-            //Creating a SIS object
-            SIS sis = new SIS();
-
-            //Enrolling a student in a course
-            sis.EnrollStudentInCourse(student1, course1);
-            Console.WriteLine($"Student {student1.FirstName} {student1.LastName} enrolled in course {course1.CourseName}");
-            //Assigning a teacher to a course
-            sis.AssignTecherToCourse(teacher1, course1);
-            //Record Payment Detils
-            sis.RecordPayments(student1, payment1.Amount, payment1.PaymentDate);
-
-            sis.GenerateEnrollmentReport(student1, enrollment1, course1);
-            sis.GeneratePaymentReport(student1, payment1);
-            sis.GenerateCourseStatics(course1);
-
-            //TASK 2---------------COMPLETED--------------------
-
         }
-
-
     }
 }

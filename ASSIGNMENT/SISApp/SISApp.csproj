@@ -7,4 +7,12 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Entity\" />
+    <Folder Include="DAO\" />
+    <Folder Include="Main\" />
+    <Folder Include="Exception\" />
+    <Folder Include="Util\" />
+  </ItemGroup>
+
 </Project>
