@@ -4,18 +4,7 @@ using System.Linq;
 
 namespace StudentInformationSystem
 {
-    // Custom Exceptions
-    public class DuplicateEnrollmentException : Exception { public DuplicateEnrollmentException(string message) : base(message) { } }
-    public class CourseNotFoundException : Exception { public CourseNotFoundException(string message) : base(message) { } }
-    public class StudentNotFoundException : Exception { public StudentNotFoundException(string message) : base(message) { } }
-    public class TeacherNotFoundException : Exception { public TeacherNotFoundException(string message) : base(message) { } }
-    public class PaymentValidationException : Exception { public PaymentValidationException(string message) : base(message) { } }
-    public class InvalidStudentDataException : Exception { public InvalidStudentDataException(string message) : base(message) { } }
-    public class InvalidCourseDataException : Exception { public InvalidCourseDataException(string message) : base(message) { } }
-    public class InvalidEnrollmentDataException : Exception { public InvalidEnrollmentDataException(string message) : base(message) { } }
-    public class InvalidTeacherDataException : Exception { public InvalidTeacherDataException(string message) : base(message) { } }
-    public class InsufficientFundsException : Exception { public InsufficientFundsException(string message) : base(message) { } }
-
+    
     // Student Class
     public class Student
     {
@@ -31,9 +20,6 @@ namespace StudentInformationSystem
 
         public void EnrollInCourse(Course course)
         {
-            if (enrollments.Any(e => e.CourseID == course.CourseID))
-                throw new DuplicateEnrollmentException("Student is already enrolled in this course.");
-
             var enrollment = new Enrollment
             {
                 EnrollmentID = new Random().Next(1000, 9999),
@@ -47,9 +33,6 @@ namespace StudentInformationSystem
 
         public void UpdateStudentInfo(string firstName, string lastName, DateTime dateOfBirth, string email, string phoneNumber)
         {
-            if (dateOfBirth > DateTime.Now || !email.Contains("@"))
-                throw new InvalidStudentDataException("Invalid student data provided.");
-
             FirstName = firstName;
             LastName = lastName;
             DateOfBirth = dateOfBirth;
@@ -59,9 +42,6 @@ namespace StudentInformationSystem
 
         public void MakePayment(decimal amount, DateTime paymentDate)
         {
-            if (amount <= 0 || paymentDate > DateTime.Now)
-                throw new PaymentValidationException("Invalid payment amount or date.");
-
             payments.Add(new Payment { PaymentID = new Random().Next(1000, 9999), Student = this, Amount = amount, PaymentDate = paymentDate });
         }
 
@@ -71,6 +51,7 @@ namespace StudentInformationSystem
         }
 
         public List<Enrollment> GetEnrolledCourses() => enrollments;
+
         public List<Payment> GetPaymentHistory() => payments;
     }
 
@@ -87,18 +68,12 @@ namespace StudentInformationSystem
 
         public void AssignTeacher(Teacher teacher)
         {
-            if (teacher == null)
-                throw new TeacherNotFoundException("Teacher not found.");
-
             AssignedTeacher = teacher;
             teacher.AddAssignedCourse(this);
         }
 
         public void UpdateCourseInfo(string courseCode, string courseName, string instructor)
         {
-            if (string.IsNullOrWhiteSpace(courseCode) || string.IsNullOrWhiteSpace(instructor))
-                throw new InvalidCourseDataException("Invalid course data.");
-
             CourseCode = courseCode;
             CourseName = courseName;
             InstructorName = instructor;
@@ -110,8 +85,14 @@ namespace StudentInformationSystem
         }
 
         public List<Enrollment> GetEnrollments() => enrollments;
+
         public Teacher GetTeacher() => AssignedTeacher;
-        public void AddEnrollment(Enrollment enrollment) => enrollments.Add(enrollment);
+
+        public void AddEnrollment(Enrollment enrollment)
+        {
+            enrollments.Add(enrollment);
+        }
+
         public int GetTotalEnrollments() => enrollments.Count;
 
         public decimal GetTotalPayments(List<Student> students)
@@ -143,9 +124,6 @@ namespace StudentInformationSystem
 
         public void UpdateTeacherInfo(string firstName, string lastName, string email)
         {
-            if (string.IsNullOrWhiteSpace(firstName) || string.IsNullOrWhiteSpace(email))
-                throw new InvalidTeacherDataException("Invalid teacher data.");
-
             FirstName = firstName;
             LastName = lastName;
             Email = email;
@@ -157,7 +135,11 @@ namespace StudentInformationSystem
         }
 
         public List<Course> GetAssignedCourses() => assignedCourses;
-        public void AddAssignedCourse(Course course) => assignedCourses.Add(course);
+
+        public void AddAssignedCourse(Course course)
+        {
+            assignedCourses.Add(course);
+        }
     }
 
     // Payment Class
@@ -177,14 +159,9 @@ namespace StudentInformationSystem
     public class SIS
     {
         private List<Student> allStudents = new List<Student>();
-        private List<Course> allCourses = new List<Course>();
-        private List<Teacher> allTeachers = new List<Teacher>();
 
         public void EnrollStudentInCourse(Student student, Course course)
         {
-            if (student == null) throw new StudentNotFoundException("Student not found.");
-            if (course == null) throw new CourseNotFoundException("Course not found.");
-
             student.EnrollInCourse(course);
             if (!allStudents.Contains(student))
                 allStudents.Add(student);
@@ -192,15 +169,11 @@ namespace StudentInformationSystem
 
         public void AssignTeacherToCourse(Teacher teacher, Course course)
         {
-            if (teacher == null) throw new TeacherNotFoundException("Teacher not found.");
-            if (course == null) throw new CourseNotFoundException("Course not found.");
-
             course.AssignTeacher(teacher);
         }
 
         public void RecordPayment(Student student, decimal amount, DateTime paymentDate)
         {
-            if (student == null) throw new StudentNotFoundException("Student not found.");
             student.MakePayment(amount, paymentDate);
         }
 
@@ -230,39 +203,29 @@ namespace StudentInformationSystem
             Console.WriteLine($"Total Enrollments: {totalEnrollments}");
             Console.WriteLine($"Total Payments: {totalPayments:C}");
         }
-
-        public List<Enrollment> GetEnrollmentsForStudent(Student student) => student.GetEnrolledCourses();
-        public List<Course> GetCoursesForTeacher(Teacher teacher) => teacher.GetAssignedCourses();
     }
 
     class Program
     {
         static void Main(string[] args)
         {
-            try
-            {
-                Student student1 = new Student { StudentID = 1, FirstName = "John", LastName = "Doe", DateOfBirth = new DateTime(2000, 5, 15), Email = "john.doe@example.com", PhoneNumber = "123-456-7890" };
-                Course course1 = new Course { CourseID = 101, CourseName = "Intro to C#", CourseCode = "CS101", InstructorName = "Dr. Smith" };
-                Teacher teacher1 = new Teacher { TeacherID = 201, FirstName = "Sarah", LastName = "Connor", Email = "sarah.connor@example.com" };
+            Student student1 = new Student { StudentID = 1, FirstName = "John", LastName = "Doe", DateOfBirth = new DateTime(2000, 5, 15), Email = "john.doe@example.com", PhoneNumber = "123-456-7890" };
+            Course course1 = new Course { CourseID = 101, CourseName = "Intro to C#", CourseCode = "CS101", InstructorName = "Dr. Smith" };
+            Teacher teacher1 = new Teacher { TeacherID = 201, FirstName = "Sarah", LastName = "Connor", Email = "sarah.connor@example.com" };
 
-                SIS sis = new SIS();
+            SIS sis = new SIS();
 
-                sis.EnrollStudentInCourse(student1, course1);
-                sis.AssignTeacherToCourse(teacher1, course1);
-                sis.RecordPayment(student1, 500.00m, DateTime.Now);
+            sis.EnrollStudentInCourse(student1, course1);
+            sis.AssignTeacherToCourse(teacher1, course1);
+            sis.RecordPayment(student1, 500.00m, DateTime.Now);
 
-                student1.DisplayStudentInfo();
-                course1.DisplayCourseInfo();
-                teacher1.DisplayTeacherInfo();
+            student1.DisplayStudentInfo();
+            course1.DisplayCourseInfo();
+            teacher1.DisplayTeacherInfo();
 
-                sis.GenerateEnrollmentReport(course1);
-                sis.GeneratePaymentReport(student1);
-                sis.CalculateCourseStatistics(course1);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            sis.GenerateEnrollmentReport(course1);
+            sis.GeneratePaymentReport(student1);
+            sis.CalculateCourseStatistics(course1);
 
             Console.ReadLine();
         }
