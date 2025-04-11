@@ -60,21 +60,22 @@ namespace StudentInformationSystem
         static void Main(string[] args)
         {
             //Creating a student
-            Student student1 = new Student {
-                student1.StudentID = 10,
-                student1.FirstName = "sanjay",
-                student1.LastName = "kumar",
-                student1.DateofBirth = new DateOnly(2004, 5, 15),
-                student1.Email = "sanjaykuma@gmail.com",
-                student1.PhoneNumber = "876578901"
+            Student student1 = new Student();
+            {
+                student1.StudentID = 10;
+                student1.FirstName = "sanjay";
+                student1.LastName = "kumar";
+                student1.DateofBirth = new DateOnly(2004, 5, 15);
+                student1.Email = "sanjaykuma@gmail.com";
+                student1.PhoneNumber = "876578901";
             };
             //Creating a course
-            Course course1 = new Course
+            Course course1 = new Course();
             {
-                course1.CourseID = 201,
-                course1.CourseName = "C# Programming",
-                course1.CourseCode = 101,
-                course1.InstructorName = "Newtorn"
+                course1.CourseID = 201;
+                course1.CourseName = "C# Programming";
+                course1.CourseCode = 101;
+                course1.InstructorName = "Newtor";
             };
             //Creating an enrollment
             Enrollment enrollment1 = new Enrollment
