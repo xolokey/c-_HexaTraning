@@ -241,15 +241,41 @@ namespace StudentInformationSystem
         {
             try
             {
-                Student student1 = new Student { StudentID = 1, FirstName = "John", LastName = "Doe", DateOfBirth = new DateTime(2000, 5, 15), Email = "john.doe@example.com", PhoneNumber = "123-456-7890" };
-                Course course1 = new Course { CourseID = 101, CourseName = "Intro to C#", CourseCode = "CS101", InstructorName = "Dr. Smith" };
-                Teacher teacher1 = new Teacher { TeacherID = 201, FirstName = "Sarah", LastName = "Connor", Email = "sarah.connor@example.com" };
+                Student student1 = new Student
+                { 
+                    StudentID = 1, 
+                    FirstName = "Ajay", 
+                    LastName = "Kumar", 
+                    DateOfBirth = new DateTime(2004, 5, 15), 
+                    Email = "ajay@gmail.com",
+                    PhoneNumber = "9786579435" 
+                };
+                Course course1 = new Course 
+                { 
+                    CourseID = 101, 
+                    CourseName = "C#", 
+                    CourseCode = "CS101", 
+                    InstructorName = "Manoj"
+                };
+                Teacher teacher1 = new Teacher 
+                { 
+                    TeacherID = 201,
+                    FirstName = "Soyeb",
+                    LastName = "Ganchi",
+                    Email = "soyeb@gmail.com"
+                };
+
 
                 SIS sis = new SIS();
 
                 sis.EnrollStudentInCourse(student1, course1);
                 sis.AssignTeacherToCourse(teacher1, course1);
-                sis.RecordPayment(student1, 500.00m, DateTime.Now);
+                sis.RecordPayment(student1, 3500.00m, DateTime.Now);
+
+               // sis.EnrollStudentInCourse(student1, course1);
+               // sis.AssignTeacherToCourse(teacher1, course1);
+               // sis.RecordPayment(student1, 2500.00m, DateTime.Now);
+
 
                 student1.DisplayStudentInfo();
                 course1.DisplayCourseInfo();
