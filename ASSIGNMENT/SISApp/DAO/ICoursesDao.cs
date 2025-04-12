@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SISApp
+namespace SISApp.DAO
 {
-    internal class program2
+    public interface ICoursesDao<T>
     {
     }
 }
