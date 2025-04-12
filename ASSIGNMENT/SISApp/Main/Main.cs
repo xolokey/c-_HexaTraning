@@ -1,60 +1,65 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using SISApp.DAO;
 using SISApp.Entities;
-//using SISApp.DAO;
+using SISApp.Util;
+using SISApp.Exception;
+using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace SISApp.Main
 {
-    public class MainSIS
+    public class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
-            Students student1 = new Students
-            { 
-                StudentID = 101,
+            // Create instances of StudentDao and sample data
+            StudentDao studentDao = new StudentDao();
+
+            // Sample student and course
+            Students student = new Students
+            {
+                StudentID = 1,
                 FirstName = "John",
                 LastName = "Doe",
-                DateOfBirth = new DateTime(2000, 5, 15),
+                DateOfBirth = new DateTime(1995, 5, 15),
                 Email = "john.doe@example.com",
                 PhoneNumber = "123-456-7890"
             };
-            Courses course1 = new Courses
-            { 
-                CourseID = 201,
-                CourseName = "Intro to C#",
+
+            Courses course = new Courses
+            {
+                CourseID = 101,
+                CourseName = "Introduction to Programming",
                 CourseCode = "CS101",
-                InstructorName = "Dr. Smith" 
-            };
-            Teacher teacher1 = new Teacher
-            { 
-                TeacherID = 301,
-                FirstName = "Sarah",
-                
-                LastName = "Connor",
-                Email = "sarah.connor@example.com"
+                InstructorName = "Dr. Smith"
             };
 
-            //Console.WriteLine($"ID: {student1.StudentID}, Name: {student1.FirstName} {LastName}, DOB: {DateOfBirth.ToShortDateString()}, Email: {Email}, Phone: {PhoneNumber}");
-            Console.WriteLine($"ID: {student1.StudentID}, Name: {student1.FirstName} {student1.LastName}, DOB: {student1.DateOfBirth.ToShortDateString()}, Email: {student1.Email}, Phone: {student1.PhoneNumber}");
+            // Enroll the student in a course
+            Console.WriteLine("Enrolling student in course...");
+            try
+            {
+                studentDao.EnrollStudentInCourse(student, course);
+                Console.WriteLine($"Student {student.FirstName} {student.LastName} successfully enrolled in {course.CourseName}.");
+            }
+            catch (System.Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
 
-            //SIS sis = new SIS();
+            // Update student information
+            Console.WriteLine("\nUpdating student information...");
+            try
+            {
+                studentDao.UpdateStudentInfo(student.StudentID, "Jane", "Doe", new DateTime(1995, 5, 15), "jane.doe@example.com", "987-654-3210");
+                Console.WriteLine("Student information updated successfully.");
+            }
+            catch (System.Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
 
-            //sis.EnrollStudentInCourse(student1, course1);
-            //sis.AssignTeacherToCourse(teacher1, course1);
-            //sis.RecordPayment(student1, 500.00m, DateTime.Now);
-
-            //student1.DisplayStudentInfo();
-            //course1.DisplayCourseInfo();
-            //teacher1.DisplayTeacherInfo();
-
-            //sis.GenerateEnrollmentReport(course1);
-            //sis.GeneratePaymentReport(student1);
-            //sis.CalculateCourseStatistics(course1);
-
-            Console.ReadLine();
+            Console.WriteLine("\nProgram execution completed. Press any key to exit.");
+            Console.ReadKey();
         }
     }
 }
