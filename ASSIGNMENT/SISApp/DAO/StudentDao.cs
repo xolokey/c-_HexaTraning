@@ -122,9 +122,38 @@ namespace SISApp.DAO
             }
 
         }
-        public Students GetStudentDetails(Students student)
+        //To Make Payment
+        public void MakePayment(int studentId, decimal amount, DateOnly paymentDate)
         {
+            try
+            {
+                using (SqlConnection conn = DBConnUtil.GetConnection("AppSettings.json"))
+                {
+                    conn.Open();
 
+                    // Insert payment record into the Payments table
+                    string insertSql = "INSERT INTO Payments (StudentID, Amount, PaymentDate) VALUES (@StudentID, @Amount, @PaymentDate)";
+                    using (SqlCommand cmd = new SqlCommand(insertSql, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@StudentID", studentId);
+                        cmd.Parameters.AddWithValue("@Amount", amount);
+                        cmd.Parameters.AddWithValue("@PaymentDate", paymentDate);
+
+                        cmd.ExecuteNonQuery();
+                    }
+
+                    Console.WriteLine("Payment recorded successfully.");
+                }
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine($"An error occurred while recording the payment: {ex.Message}");
+            }
         }
+
+        //public Students GetStudentDetails(Students student)
+        //{
+
+        //}
     }
 }
