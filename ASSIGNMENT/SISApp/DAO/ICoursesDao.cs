@@ -8,5 +8,7 @@ namespace SISApp.DAO
 {
     public interface ICoursesDao<T>
     {
+        T SaveCourse(T course);
+
     }
 }

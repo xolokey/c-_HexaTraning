@@ -8,5 +8,6 @@ namespace SISApp.DAO
 {
     interface IEnrollmentDao<T>
     {
+        T SaveEnrollment(T enrollment);
     }
 }
