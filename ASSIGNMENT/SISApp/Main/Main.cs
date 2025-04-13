@@ -90,58 +90,8 @@ namespace SISApp.Main
                 case 5:
                     break;
 
-
-
-
-
-                    //case 5:
-                    //    //Get student Details
-                    //    var id1 = 101;
-                    //    var studentById = studentDao1.GetStudentDetails(id1);
-                    //    Console.WriteLine($"{studentById.StudentID}\t{studentById.FirstName}");
-                    //    break;
-
             }
         }
-
-
-            //    case 2:
-            //        //Delete Product
-            //        var productId = 1;
-            //        var isDeleted = productInfoDao.DeleteProductInfo(1);
-            //        Console.WriteLine(isDeleted ? "Product is Deleted" : "Error");
-            //        break;
-            //    case 3:
-            //        //update product
-            //        ProductInfo productInfo1 = new ProductInfo();
-            //        productInfo1.ProductId = 1;
-            //        productInfo1.ProductName = "Cookies";
-            //        productInfo1.ListPrice = 12;
-            //        productInfo1.ExpiryDate = DateTime.Parse("04-05-2026");
-            //        var updatedProduct = productInfoDao.UpdateProductInfo(productInfo1);
-            //        Console.WriteLine(updatedProduct != null ? "Product is Updated" : "Error");
-            //        break;
-            //    case 4:
-            //        //Get product by id
-            //        var id1 = 1;
-            //        var productById = productInfoDao.GetProductInfoById(id1);
-            //        Console.WriteLine($"{productById.ProductId}\t{productById.ProductName}");
-            //        break;
-            //    case 5:
-            //        //Get All product
-            //        var allProducts = productInfoDao.GetAllProductInfo();
-            //        foreach (var product in allProducts)
-            //        {
-            //            Console.WriteLine($"{product.ProductId}\t{product.ProductName}");
-            //        }
-            //        break;
-                  //}
-            
-            //else
-            //{
-            //    Console.WriteLine("Incorrect EmailId or Password");
-            //}
-
 
         
     }
