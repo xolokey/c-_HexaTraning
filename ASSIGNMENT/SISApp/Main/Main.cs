@@ -34,18 +34,6 @@ namespace SISApp.Main
                 InstructorName = "Ramesh"
             };
 
-            // Enroll the student in a course
-            //Console.WriteLine("Enrolling student in course...");
-            //try
-            //{
-            //    studentDao1.EnrollStudentInCourse(student, course);
-            //    Console.WriteLine($"Student {student.FirstName} {student.LastName} successfully enrolled in {course.CourseName}.");
-            //}
-            //catch (System.Exception ex)
-            //{
-            //    Console.WriteLine($"Error: {ex.Message}");
-            //}
-
             // Update student information
             Console.Write("Enter 1.Save Student 2.Enrolling student 3.Update Student 4.Get By Id 5.GetAll:");
             var choice = Convert.ToInt32(Console.ReadLine());
@@ -61,6 +49,7 @@ namespace SISApp.Main
                     student.LastName = "kumar";
                     student.DateOfBirth = new DateTime(2004, 5, 16);
                     student.Email = "naveen@gmail.com";
+                    student.PhoneNumber = "7575473467";
                     var newStudent = studentDao1.SaveStudent(student);
                     Console.WriteLine(newStudent != null ? "Student is Saved" : "Error");
                     break;
@@ -88,11 +77,29 @@ namespace SISApp.Main
                     Console.WriteLine(updatedStudent != null ? "Product is Updated" : "Error");
                     break;
                 case 4:
-                    //Get student Details
-                    var id1 = 101;
-                    var studentById = studentDao1.GetStudentDetails(id1);
-                    Console.WriteLine($"{studentById.StudentID}\t{studentById.FirstName}");
+                    try
+                    {
+                        studentDao.MakePayment(101, 2500.00m, DateOnly.FromDateTime(DateTime.Now));
+                        Console.WriteLine("Payment made successfully.");
+                    }
+                    catch (System.Exception ex)
+                    {
+                        Console.WriteLine($"Error: {ex.Message}");
+                    }
                     break;
+                case 5:
+                    break;
+
+
+
+
+
+                    //case 5:
+                    //    //Get student Details
+                    //    var id1 = 101;
+                    //    var studentById = studentDao1.GetStudentDetails(id1);
+                    //    Console.WriteLine($"{studentById.StudentID}\t{studentById.FirstName}");
+                    //    break;
 
             }
         }

@@ -11,7 +11,7 @@ namespace SISApp.Entities
         public int PaymentID { get; set; }
         public Students? StudentID { get; set; }
         public decimal Amount { get; set; }
-        public DateTime PaymentDate { get; set; }
+        public DateOnly PaymentDate { get; set; }
 
     }
 }
