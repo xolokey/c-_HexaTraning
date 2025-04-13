@@ -5,6 +5,7 @@ using Microsoft.Data.SqlClient;
 using SISApp.Util;
 using SISApp.Entities;
 using SISApp.Exception;
+using Microsoft.Identity.Client;
 
 namespace SISApp.DAO
 {
@@ -13,6 +14,41 @@ namespace SISApp.DAO
         SqlConnection sqlCon = DBConnUtil.GetConnection("AppSettings.json");
         SqlCommand cmd = new SqlCommand();
         SqlDataReader? dr;
+
+        public Students SaveStudent(Students student)
+        {
+            try
+            {
+                cmd.Connection = sqlCon;
+                cmd.CommandText = "INSERT INTO Students (FirstName, LastName, DateOfBirth, Email, PhoneNumber) VALUES (@FirstName, @LastName, @DateOfBirth, @Email, @PhoneNumber)";
+                cmd.Parameters.Clear();
+                cmd.Parameters.AddWithValue("@StudentID", student.StudentID);
+                cmd.Parameters.AddWithValue("@FirstName", student.FirstName);
+                cmd.Parameters.AddWithValue("@LastName", student.LastName);
+                cmd.Parameters.AddWithValue("@DateOfBirth", student.DateOfBirth);
+                cmd.Parameters.AddWithValue("@Email", student.Email);
+                cmd.Parameters.AddWithValue("@PhoneNumber", student.PhoneNumber);
+
+                if (sqlCon.State == System.Data.ConnectionState.Closed)
+                {
+                    sqlCon.Open();
+                }
+                cmd.ExecuteNonQuery();
+                return student;
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine($"SQL Error: {ex.Message}");
+                return null;
+            }
+            catch (InvalidStudentDataException ex)
+            {
+                Console.WriteLine($"Invalid Data Error: {ex.Message}");
+                return null;
+            }
+        }
+
+
 
         public void EnrollStudentInCourse(Students student, Courses course)
         {
@@ -58,33 +94,37 @@ namespace SISApp.DAO
             }
         }
 
-        public void UpdateStudentInfo(int studentId, string firstName, string lastName, DateTime dateOfBirth, string email, string phoneNumber)
+        public Students UpdateStudentInfo(Students student)
         {
             try
             {
-                using (SqlConnection conn = DBConnUtil.GetConnection("AppSettings.json"))
+                cmd.Connection = sqlCon;
+                StringBuilder queryBuilder = new StringBuilder();
+                queryBuilder = queryBuilder.Append($"update Students set FirstName='{student.FirstName}',LastName={student.LastName},DateOfBirth='{student.DateOfBirth}',Email={student.Email},PhoneNumber ='{student.PhoneNumber}' where StudentId={student.StudentID}");
+                // queryBuilder = queryBuilder.Append($"update Students set FirstName='{students.FirstName}',LastName={students.LastName},DateOfBirth='{students.DateOfBirth}',Email='{students.Email}',PhoneNumber ='{students.}' where ProductId={students.LastName}");
+                cmd.CommandText = queryBuilder.ToString();
+                if (sqlCon.State == System.Data.ConnectionState.Closed)
                 {
-                    conn.Open();
-
-                    string query = "UPDATE Students SET FirstName = @FirstName, LastName = @LastName, DateOfBirth = @DateOfBirth, Email = @Email, PhoneNumber = @PhoneNumber WHERE StudentID = @StudentID";
-                    using (SqlCommand cmd = new SqlCommand(query, conn))
-                    {
-                        cmd.Parameters.AddWithValue("@StudentID", studentId);
-                        cmd.Parameters.AddWithValue("@FirstName", firstName);
-                        cmd.Parameters.AddWithValue("@LastName", lastName);
-                        cmd.Parameters.AddWithValue("@DateOfBirth", dateOfBirth);
-                        cmd.Parameters.AddWithValue("@Email", email);
-                        cmd.Parameters.AddWithValue("@PhoneNumber", phoneNumber);
-
-                        cmd.ExecuteNonQuery();
-                    }
+                    sqlCon.Open();
                 }
+                cmd.ExecuteNonQuery();//insert/delete/update
+                
+                return student;
+
             }
             catch (SqlException ex)
             {
-                Console.WriteLine($"An error occurred while updating the student's information: {ex.Message}");
+                return null;
             }
-        }
+            catch (InvalidStudentDataException ex)
+            {
+                return null;
+            }
 
+        }
+        public Students GetStudentDetails(Students student)
+        {
+
+        }
     }
 }

@@ -67,7 +67,7 @@ namespace StudentInformationSystem
 
         public void DisplayStudentInfo()
         {
-            Console.WriteLine($"ID: {StudentID}, Name: {FirstName} {LastName}, DOB: {DateOfBirth.ToShortDateString()}, Email: {Email}, Phone: {PhoneNumber}");
+            Console.WriteLine($"StudentID: {StudentID}, StudentName: {FirstName} {LastName}, DOB: {DateOfBirth.ToShortDateString()}, Email: {Email}, Phone: {PhoneNumber}");
         }
 
         public List<Enrollment> GetEnrolledCourses() => enrollments;
@@ -81,7 +81,7 @@ namespace StudentInformationSystem
         public string CourseName { get; set; } = string.Empty;
         public string CourseCode { get; set; } = string.Empty;
         public string InstructorName { get; set; } = string.Empty;
-        public Teacher AssignedTeacher { get; set; }
+        public Teacher? AssignedTeacher { get; set; }
 
         private List<Enrollment> enrollments = new List<Enrollment>();
 
@@ -106,11 +106,11 @@ namespace StudentInformationSystem
 
         public void DisplayCourseInfo()
         {
-            Console.WriteLine($"Course ID: {CourseID}, Code: {CourseCode}, Name: {CourseName}, Instructor: {InstructorName}");
+            Console.WriteLine($"Course ID: {CourseID}, CourseCode: {CourseCode}, CourseName: {CourseName}, Instructor: {InstructorName}");
         }
 
         public List<Enrollment> GetEnrollments() => enrollments;
-        public Teacher GetTeacher() => AssignedTeacher;
+        public Teacher? GetTeacher() => AssignedTeacher;
         public void AddEnrollment(Enrollment enrollment) => enrollments.Add(enrollment);
         public int GetTotalEnrollments() => enrollments.Count;
 
@@ -128,8 +128,8 @@ namespace StudentInformationSystem
         public int CourseID { get; set; }
         public DateTime EnrollmentDate { get; set; }
 
-        public Student GetStudent(List<Student> students) => students.FirstOrDefault(s => s.StudentID == StudentID);
-        public Course GetCourse(List<Course> courses) => courses.FirstOrDefault(c => c.CourseID == CourseID);
+        public Student? GetStudent(List<Student> students) => students.FirstOrDefault(s => s.StudentID == StudentID);
+        public Course? GetCourse(List<Course> courses) => courses.FirstOrDefault(c => c.CourseID == CourseID);
     }
 
     // Teacher Class
@@ -153,7 +153,7 @@ namespace StudentInformationSystem
 
         public void DisplayTeacherInfo()
         {
-            Console.WriteLine($"ID: {TeacherID}, Name: {FirstName} {LastName}, Email: {Email}");
+            Console.WriteLine($"TeacherID: {TeacherID}, TeacherName: {FirstName} {LastName}, Email: {Email}");
         }
 
         public List<Course> GetAssignedCourses() => assignedCourses;
@@ -164,11 +164,11 @@ namespace StudentInformationSystem
     public class Payment
     {
         public int PaymentID { get; set; }
-        public Student Student { get; set; }
+        public Student? Student { get; set; }
         public decimal Amount { get; set; }
         public DateTime PaymentDate { get; set; }
 
-        public Student GetStudent() => Student;
+        public Student? GetStudent() => Student;
         public decimal GetPaymentAmount() => Amount;
         public DateTime GetPaymentDate() => PaymentDate;
     }
@@ -209,7 +209,7 @@ namespace StudentInformationSystem
             Console.WriteLine($"\nEnrollment Report for {course.CourseName}:");
             foreach (var enrollment in course.GetEnrollments())
             {
-                Console.WriteLine($"Enrollment ID: {enrollment.EnrollmentID}, Student ID: {enrollment.StudentID}, Date: {enrollment.EnrollmentDate}");
+                Console.WriteLine($"Enrollment ID: {enrollment.EnrollmentID}, Student ID: {enrollment.StudentID}, EnrollmentDate: {enrollment.EnrollmentDate}");
             }
         }
 
@@ -218,7 +218,7 @@ namespace StudentInformationSystem
             Console.WriteLine($"\nPayment Report for {student.FirstName} {student.LastName}:");
             foreach (var payment in student.GetPaymentHistory())
             {
-                Console.WriteLine($"Payment ID: {payment.PaymentID}, Amount: {payment.Amount}, Date: {payment.PaymentDate}");
+                Console.WriteLine($"Payment ID: {payment.PaymentID}, Amount: {payment.Amount}, PaymentDate: {payment.PaymentDate}");
             }
         }
 
@@ -243,26 +243,50 @@ namespace StudentInformationSystem
             {
                 Student student1 = new Student
                 { 
-                    StudentID = 1, 
+                    StudentID = 101, 
                     FirstName = "Ajay", 
                     LastName = "Kumar", 
                     DateOfBirth = new DateTime(2004, 5, 15), 
                     Email = "ajay@gmail.com",
                     PhoneNumber = "9786579435" 
                 };
+                Student student2 = new Student
+                {
+                    StudentID = 102,
+                    FirstName = "Vijay",
+                    LastName = "Sharma",
+                    DateOfBirth = new DateTime(2003, 8, 20),
+                    Email="vijay@gmail.com",
+                    PhoneNumber = "9876543210"
+                };
                 Course course1 = new Course 
                 { 
-                    CourseID = 101, 
+                    CourseID = 201, 
                     CourseName = "C#", 
                     CourseCode = "CS101", 
                     InstructorName = "Manoj"
                 };
+                Course course2 = new Course
+                {
+                    CourseID = 202,
+                    CourseName = "Java",
+                    CourseCode = "CS102",
+                    InstructorName = "Ravi"
+                };
                 Teacher teacher1 = new Teacher 
                 { 
-                    TeacherID = 201,
+                    TeacherID = 301,
                     FirstName = "Soyeb",
                     LastName = "Ganchi",
                     Email = "soyeb@gmail.com"
+                };
+                Teacher teacher2 = new Teacher
+                {
+                    TeacherID = 302,
+                    FirstName = "Kavitha",
+                    LastName = "Suresh",
+                    Email="kavitha@gmaail.com"
+
                 };
 
 
@@ -271,19 +295,54 @@ namespace StudentInformationSystem
                 sis.EnrollStudentInCourse(student1, course1);
                 sis.AssignTeacherToCourse(teacher1, course1);
                 sis.RecordPayment(student1, 3500.00m, DateTime.Now);
+                sis.RecordPayment(student1, 2500.00m, DateTime.Now);
+                student1.EnrollInCourse(course2);
 
-               // sis.EnrollStudentInCourse(student1, course1);
-               // sis.AssignTeacherToCourse(teacher1, course1);
-               // sis.RecordPayment(student1, 2500.00m, DateTime.Now);
+                sis.EnrollStudentInCourse(student2, course2);
+                sis.AssignTeacherToCourse(teacher2, course2); 
+                sis.RecordPayment(student2, 4500.00m, DateTime.Now);
 
+                //student1.GetPaymentHistory();
+                
 
+                //Display student and course information
+                Console.WriteLine("Student Information...");
                 student1.DisplayStudentInfo();
-                course1.DisplayCourseInfo();
-                teacher1.DisplayTeacherInfo();
+                student2.DisplayStudentInfo();
+                Console.WriteLine();
 
+                //Update student information
+                Console.WriteLine("Updated Student1 Information...");
+                student1.UpdateStudentInfo(firstName:"Sanjay",lastName:"Kumar",dateOfBirth:new DateTime(2004,5,15),email:"sanjay@gmail.com",phoneNumber: "9876543210");
+                student1.DisplayStudentInfo();
+                Console.WriteLine();
+
+                Console.WriteLine("Course Information...");
+                course1.DisplayCourseInfo();
+                course2.DisplayCourseInfo();
+                Console.WriteLine();
+
+                Console.WriteLine("Teacher Information...");
+                teacher1.DisplayTeacherInfo();
+                teacher2.DisplayTeacherInfo();
+                Console.WriteLine();
+
+                //Display Statistics--Course1
+                Console.WriteLine("Course 1 Statistics Report...");
                 sis.GenerateEnrollmentReport(course1);
-                sis.GeneratePaymentReport(student1);
                 sis.CalculateCourseStatistics(course1);
+                Console.WriteLine();
+
+                //Display Statistics--Course2
+                Console.WriteLine("Course 2 Statistics Report...");
+                sis.GenerateEnrollmentReport(course2);
+                sis.CalculateCourseStatistics(course2);
+                Console.WriteLine();
+
+                //Payment Report
+                Console.WriteLine("Student Payment Report...");
+                sis.GeneratePaymentReport(student1);
+                sis.GeneratePaymentReport(student2);
             }
             catch (Exception ex)
             {

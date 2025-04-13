@@ -9,6 +9,9 @@ namespace SISApp.DAO
 {
     public interface IStudentDao<T>
     {
+        T SaveStudent(T student);
         void EnrollStudentInCourse(Students student, Courses course);
+        T UpdateStudentInfo(T student);
+        T GetStudentDetails(T student);
     }
 }
