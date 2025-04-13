@@ -18,8 +18,9 @@ namespace SISApp.DAO
             try
             {
                 cmd.Connection = sqlCon;
-                cmd.CommandText = "INSERT INTO Courses (CourseName, CourseCode, InstructorName) VALUES (@CourseName, @CourseCode, @InstructorName)";
+                cmd.CommandText = "INSERT INTO Courses (CourseID,CourseName, CourseCode, InstructorName) VALUES (@CourseID,@CourseName, @CourseCode, @InstructorName)";
                 cmd.Parameters.Clear();
+                cmd.Parameters.AddWithValue("@CourseID", course.CourseID);
                 cmd.Parameters.AddWithValue("@CourseName", course.CourseName);
                 cmd.Parameters.AddWithValue("@CourseCode", course.CourseCode);
                 cmd.Parameters.AddWithValue("@InstructorName", course.InstructorName);
@@ -40,6 +41,48 @@ namespace SISApp.DAO
             {
                 Console.WriteLine($"Invalid Data Error: {ex.Message}");
                 return null;
+            }
+        }
+
+        //Get Course by ID--------------
+        public void DisplayCourseInfo(Courses course)
+        {
+            try
+            {
+                using (SqlConnection conn = DBConnUtil.GetConnection("AppSettings.json"))
+                {
+                    conn.Open();
+
+                    string selectSql = "SELECT CourseID, CourseName, CourseCode, InstructorName FROM Courses WHERE CourseID = @CourseID";
+                    using (SqlCommand selectCmd = new SqlCommand(selectSql, conn))
+                    {
+                        selectCmd.Parameters.AddWithValue("@CourseID", course.CourseID);
+
+                        using (SqlDataReader reader = selectCmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                course.CourseID = reader.GetInt32(0);
+                                course.CourseName = reader.GetString(1);
+                                course.CourseCode = reader.GetString(2);
+                                course.InstructorName = reader.IsDBNull(3) ? null : reader.GetString(3);
+
+                                Console.WriteLine($"Course ID: {course.CourseID}");
+                                Console.WriteLine($"Course Name: {course.CourseName}");
+                                Console.WriteLine($"Course Code: {course.CourseCode}");
+                                Console.WriteLine($"Instructor Name: {course.InstructorName}");
+                            }
+                            else
+                            {
+                                Console.WriteLine("Course not found.");
+                            }
+                        }
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine($"An error occurred while retrieving the course info: {ex.Message}");
             }
         }
 

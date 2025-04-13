@@ -20,7 +20,7 @@ namespace SISApp.DAO
             try
             {
                 cmd.Connection = sqlCon;
-                cmd.CommandText = "INSERT INTO Students (FirstName, LastName, DateOfBirth, Email, PhoneNumber) VALUES (@FirstName, @LastName, @DateOfBirth, @Email, @PhoneNumber)";
+                cmd.CommandText = "INSERT INTO Students (StudentID,FirstName, LastName, DateOfBirth, Email, PhoneNumber) VALUES (@StudentID,@FirstName, @LastName, @DateOfBirth, @Email, @PhoneNumber)";
                 cmd.Parameters.Clear();
                 cmd.Parameters.AddWithValue("@StudentID", student.StudentID);
                 cmd.Parameters.AddWithValue("@FirstName", student.FirstName);
