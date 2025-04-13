@@ -8,5 +8,7 @@ namespace SISApp.DAO
 {
     public interface IPaymentsDao<T>
     {
+        T SavePayment(T payment);
+     
     }
 }

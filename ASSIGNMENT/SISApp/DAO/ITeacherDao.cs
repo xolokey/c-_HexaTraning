@@ -8,5 +8,6 @@ namespace SISApp.DAO
 {
     public interface ITeacherDao<T>
     {
+        T SaveTeacher(T teacher);
     }
 }

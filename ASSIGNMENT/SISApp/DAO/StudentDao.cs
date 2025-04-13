@@ -58,22 +58,8 @@ namespace SISApp.DAO
                 {
                     conn.Open();
 
-                    // 1. Check for duplicate enrollment
-                    string checkSql = "SELECT COUNT(*) FROM Enrollments WHERE StudentID = @studentId AND CourseID = @courseId";
-                    using (SqlCommand checkCmd = new SqlCommand(checkSql, conn))
-                    {
-                        checkCmd.Parameters.AddWithValue("@studentId", student.StudentID);
-                        checkCmd.Parameters.AddWithValue("@courseId", course.CourseID);
-
-                        int count = Convert.ToInt32(checkCmd.ExecuteScalar());
-                        if (count > 0)
-                        {
-                            throw new DuplicateEnrollmentException("Student is already enrolled in this course.");
-                        }
-                    }
-
-                    // 2. Insert enrollment record
-                    string insertSql = "INSERT INTO Enrollments (StudentID, CourseID, EnrollmentDate) VALUES (@studentId, @courseId, @EnrollmentDate)";
+                    // Insert enrollment record
+                    string insertSql = "INSERT INTO Enrollment (StudentID, CourseID, EnrollmentDate) VALUES (@studentId, @courseId, @EnrollmentDate)";
                     using (SqlCommand insertCmd = new SqlCommand(insertSql, conn))
                     {
                         insertCmd.Parameters.AddWithValue("@studentId", student.StudentID);
@@ -94,66 +80,5 @@ namespace SISApp.DAO
             }
         }
 
-        public Students UpdateStudentInfo(Students student)
-        {
-            try
-            {
-                cmd.Connection = sqlCon;
-                StringBuilder queryBuilder = new StringBuilder();
-                queryBuilder = queryBuilder.Append($"update Students set FirstName='{student.FirstName}',LastName={student.LastName},DateOfBirth='{student.DateOfBirth}',Email={student.Email},PhoneNumber ='{student.PhoneNumber}' where StudentId={student.StudentID}");
-                // queryBuilder = queryBuilder.Append($"update Students set FirstName='{students.FirstName}',LastName={students.LastName},DateOfBirth='{students.DateOfBirth}',Email='{students.Email}',PhoneNumber ='{students.}' where ProductId={students.LastName}");
-                cmd.CommandText = queryBuilder.ToString();
-                if (sqlCon.State == System.Data.ConnectionState.Closed)
-                {
-                    sqlCon.Open();
-                }
-                cmd.ExecuteNonQuery();//insert/delete/update
-                
-                return student;
-
-            }
-            catch (SqlException ex)
-            {
-                return null;
-            }
-            catch (InvalidStudentDataException ex)
-            {
-                return null;
-            }
-
-        }
-        //To Make Payment
-        public void MakePayment(int studentId, decimal amount, DateOnly paymentDate)
-        {
-            try
-            {
-                using (SqlConnection conn = DBConnUtil.GetConnection("AppSettings.json"))
-                {
-                    conn.Open();
-
-                    // Insert payment record into the Payments table
-                    string insertSql = "INSERT INTO Payments (StudentID, Amount, PaymentDate) VALUES (@StudentID, @Amount, @PaymentDate)";
-                    using (SqlCommand cmd = new SqlCommand(insertSql, conn))
-                    {
-                        cmd.Parameters.AddWithValue("@StudentID", studentId);
-                        cmd.Parameters.AddWithValue("@Amount", amount);
-                        cmd.Parameters.AddWithValue("@PaymentDate", paymentDate);
-
-                        cmd.ExecuteNonQuery();
-                    }
-
-                    Console.WriteLine("Payment recorded successfully.");
-                }
-            }
-            catch (SqlException ex)
-            {
-                Console.WriteLine($"An error occurred while recording the payment: {ex.Message}");
-            }
-        }
-
-        //public Students GetStudentDetails(Students student)
-        //{
-
-        //}
     }
 }
