@@ -11,7 +11,13 @@ namespace SISApp.Exception
     {
         public DuplicateEnrollmentException(string message) : base(message) { }
     }
-    
+
+    public class InvalidStudentDataException : System.Exception
+    {
+        public InvalidStudentDataException(string message) : base(message) { }
+    }
+
+
 
 
 
