@@ -11,30 +11,27 @@ namespace SISApp.DAO
 {
     public class StudentDao : IStudentDao<Students>
     {
-        SqlConnection sqlCon = DBConnUtil.GetConnection("AppSettings.json");
-        SqlCommand cmd = new SqlCommand();
-        SqlDataReader? dr;
-
         public Students SaveStudent(Students student)
         {
             try
             {
-                cmd.Connection = sqlCon;
-                cmd.CommandText = "INSERT INTO Students (StudentID,FirstName, LastName, DateOfBirth, Email, PhoneNumber) VALUES (@StudentID,@FirstName, @LastName, @DateOfBirth, @Email, @PhoneNumber)";
-                cmd.Parameters.Clear();
-                cmd.Parameters.AddWithValue("@StudentID", student.StudentID);
-                cmd.Parameters.AddWithValue("@FirstName", student.FirstName);
-                cmd.Parameters.AddWithValue("@LastName", student.LastName);
-                cmd.Parameters.AddWithValue("@DateOfBirth", student.DateOfBirth);
-                cmd.Parameters.AddWithValue("@Email", student.Email);
-                cmd.Parameters.AddWithValue("@PhoneNumber", student.PhoneNumber);
-
-                if (sqlCon.State == System.Data.ConnectionState.Closed)
+                using (SqlConnection conn = DBConnUtil.GetConnection("AppSettings.json"))
                 {
-                    sqlCon.Open();
+                    conn.Open();
+                    string saveStudent = "INSERT INTO Students (StudentID, FirstName, LastName, DateOfBirth, Email, PhoneNumber) VALUES (@StudentID, @FirstName, @LastName, @DateOfBirth, @Email, @PhoneNumber)";
+                    using (SqlCommand cmd = new SqlCommand(saveStudent, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@StudentID", student.StudentID);
+                        cmd.Parameters.AddWithValue("@FirstName", student.FirstName);
+                        cmd.Parameters.AddWithValue("@LastName", student.LastName);
+                        cmd.Parameters.AddWithValue("@DateOfBirth", student.DateOfBirth);
+                        cmd.Parameters.AddWithValue("@Email", student.Email);
+                        cmd.Parameters.AddWithValue("@PhoneNumber", student.PhoneNumber);
+
+                        cmd.ExecuteNonQuery();
+                        return student;
+                    }
                 }
-                cmd.ExecuteNonQuery();
-                return student;
             }
             catch (SqlException ex)
             {
@@ -47,8 +44,6 @@ namespace SISApp.DAO
                 return null;
             }
         }
-
-
 
         public void EnrollStudentInCourse(Students student, Courses course)
         {
@@ -79,7 +74,7 @@ namespace SISApp.DAO
                 Console.WriteLine($"Duplicate enrollment error: {ex.Message}");
             }
         }
-        //To Get Enrollment Report
+        //To Get Enrollment Report----
         public void GenerateEnrollmentReport(int courseID)
         {
             try
@@ -88,12 +83,12 @@ namespace SISApp.DAO
                 {
                     conn.Open();
 
-                    // Step 1: Get CourseName using CourseID
+                    // 1 Get CourseName using CourseID
                     string courseName = "";
                     string getCourseSql = "SELECT CourseName FROM Courses WHERE CourseID = @CourseID";
                     using (SqlCommand getCourseCmd = new SqlCommand(getCourseSql, conn))
                     {
-                        getCourseCmd.Parameters.AddWithValue("@CourseID", courseID); // make sure courseId is provided
+                        getCourseCmd.Parameters.AddWithValue("@CourseID", courseID); 
                         var result = getCourseCmd.ExecuteScalar();
                         if (result == null)
                         {
@@ -102,8 +97,8 @@ namespace SISApp.DAO
                         }
                         courseName = result.ToString();
                     }
-                    // Step 2: Get Enrolled Students
-                    string reportSql = @"SELECT S.StudentID, S.FirstName, S.LastName, S.Email, E.EnrollmentDate FROM Students S INNER JOIN Enrollments E ON S.StudentID = E.StudentID WHERE E.CourseID = @CourseID";
+                    // 2 Get Enrolled Students
+                    string reportSql = @"SELECT S.StudentID, S.FirstName, S.LastName, S.Email, E.EnrollmentDate FROM Students S INNER JOIN Enrollment E ON S.StudentID = E.StudentID WHERE E.CourseID = @CourseID";
 
                     using (SqlCommand reportCmd = new SqlCommand(reportSql, conn))
                     {

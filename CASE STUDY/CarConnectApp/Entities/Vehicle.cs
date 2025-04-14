@@ -6,7 +6,17 @@ using System.Threading.Tasks;
 
 namespace CarConnectApp.Entities
 {
-    internal class Vehicle
+    public class Vehicle
     {
+        public int VehicleID { get; set; }
+        public string? Model { get; set; }
+        public string? Make { get; set; }
+        public int Year { get; set; }
+        public string? Color { get; set; }
+        public string? RegistrationNumber { get; set; }
+        public bool Availability { get; set; }
+        public decimal DailyRate { get; set; }
     }
+
+
 }

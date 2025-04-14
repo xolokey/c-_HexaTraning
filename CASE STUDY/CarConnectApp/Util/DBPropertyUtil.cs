@@ -18,7 +18,7 @@ namespace CarConnectApp.Util
                 .AddJsonFile(filePath);
             var config = builder.Build();
             var connectionString = config.GetConnectionString("DefaultConnection");
-            return connectionString;
+            return connectionString ?? throw new InvalidOperationException("Connection String Not Found");
         }
     }
 }

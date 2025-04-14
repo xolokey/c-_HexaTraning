@@ -36,7 +36,7 @@ namespace SISApp.Main
             {
                 CourseID =201,
                 CourseName = " Introduction to Programming",
-                CourseCode = "CS101",
+                CourseCode = "CS102",
                 InstructorName = "Ramesh"
             };
             var newCourse1 = courseDao.SaveCourse(course1);
@@ -64,6 +64,16 @@ namespace SISApp.Main
             var newCourse3 = courseDao.SaveCourse(course3);
             Console.WriteLine(newCourse3 != null ? "Course-3 is Saved" : "Error");
             Console.WriteLine();
+
+            Courses courses = new Courses
+            {
+                CourseID = 204,
+                CourseName = "Computer Science 101",
+                CourseCode = "CS101",
+                InstructorName = "Ravi"
+            };
+            var newCourse4 = courseDao.SaveCourse(courses);
+            Console.WriteLine(newCourse4 != null ? "Course-4 is Saved" : "Error");
 
             // Enroll student in course
             Console.WriteLine("Enrolling student in course...");
@@ -102,6 +112,10 @@ namespace SISApp.Main
             PaymentDao paymentDao = new PaymentDao();
             paymentDao.RecordPayment(101, 500.00m, new DateTime(2023, 4, 10));
             Console.WriteLine("Payment record inserted successfully.");
+
+            StudentDao studentDao1 = new StudentDao();
+            // Generate Enrollment Report
+            studentDao1.GenerateEnrollmentReport(201);
 
 
 
