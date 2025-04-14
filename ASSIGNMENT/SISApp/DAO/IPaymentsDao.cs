@@ -8,7 +8,9 @@ namespace SISApp.DAO
 {
     public interface IPaymentsDao<T>
     {
-        T SavePayment(T payment);
-     
+        //T SavePayment(T payment);
+        void RecordPayment(int studentId, decimal amount, DateTime paymentDate);
+
+
     }
 }

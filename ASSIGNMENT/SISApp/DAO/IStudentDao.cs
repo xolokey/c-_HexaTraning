@@ -11,9 +11,6 @@ namespace SISApp.DAO
     {
         T SaveStudent(T student);
         void EnrollStudentInCourse(Students student, Courses course);
-        //T UpdateStudentInfo(T student);
-        //void MakePayment(int studentId, decimal amount, DateOnly paymentDate);
 
-        //T GetStudentDetails(T student);
     }
 }

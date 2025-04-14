@@ -9,8 +9,8 @@ namespace SISApp.Entities
     public class Enrollment
     {
         public int EnrollmentID { get; set; }
-        public Students? StudentID { get; set; }
-        public Courses? CourseID { get; set; }
+        public Students? Student { get; set; }
+        public Courses? Course { get; set; }
         public DateTime EnrollmentDate { get; set; }
     }
 }
