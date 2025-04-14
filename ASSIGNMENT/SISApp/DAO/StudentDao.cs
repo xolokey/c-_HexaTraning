@@ -79,6 +79,59 @@ namespace SISApp.DAO
                 Console.WriteLine($"Duplicate enrollment error: {ex.Message}");
             }
         }
+        //To Get Enrollment Report
+        public void GenerateEnrollmentReport(int courseID)
+        {
+            try
+            {
+                using (SqlConnection conn = DBConnUtil.GetConnection("AppSettings.json"))
+                {
+                    conn.Open();
+
+                    // Step 1: Get CourseName using CourseID
+                    string courseName = "";
+                    string getCourseSql = "SELECT CourseName FROM Courses WHERE CourseID = @CourseID";
+                    using (SqlCommand getCourseCmd = new SqlCommand(getCourseSql, conn))
+                    {
+                        getCourseCmd.Parameters.AddWithValue("@CourseID", courseID); // make sure courseId is provided
+                        var result = getCourseCmd.ExecuteScalar();
+                        if (result == null)
+                        {
+                            Console.WriteLine("Course not found.");
+                            return;
+                        }
+                        courseName = result.ToString();
+                    }
+                    // Step 2: Get Enrolled Students
+                    string reportSql = @"SELECT S.StudentID, S.FirstName, S.LastName, S.Email, E.EnrollmentDate FROM Students S INNER JOIN Enrollments E ON S.StudentID = E.StudentID WHERE E.CourseID = @CourseID";
+
+                    using (SqlCommand reportCmd = new SqlCommand(reportSql, conn))
+                    {
+                        reportCmd.Parameters.AddWithValue("@CourseID", courseID);
+                        using (SqlDataReader reader = reportCmd.ExecuteReader())
+                        {
+                            Console.WriteLine($"\n--- Enrollment Report for '{courseName}' ---");
+                            Console.WriteLine($"{"Student ID",-12} {"Name",-25} {"Email",-30} {"Enrolled On"}");
+
+                            while (reader.Read())
+                            {
+                                int studentId = reader.GetInt32(0);
+                                string fullName = reader.GetString(1) + " " + reader.GetString(2);
+                                string email = reader.GetString(3);
+                                DateTime enrollmentDate = reader.GetDateTime(4);
+
+                                Console.WriteLine($"{studentId,-12} {fullName,-25} {email,-30} {enrollmentDate.ToShortDateString()}");
+                            }
+                        }
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine($"Error generating report: {ex.Message}");
+            }
+        }
+
 
     }
 }

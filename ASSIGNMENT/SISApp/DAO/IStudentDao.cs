@@ -11,6 +11,7 @@ namespace SISApp.DAO
     {
         T SaveStudent(T student);
         void EnrollStudentInCourse(Students student, Courses course);
+        void GenerateEnrollmentReport(int courseID);
 
     }
 }
