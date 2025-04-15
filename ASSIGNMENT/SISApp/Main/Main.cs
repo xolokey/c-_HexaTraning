@@ -118,14 +118,7 @@ namespace SISApp.Main
             studentDao1.GenerateEnrollmentReport(201);
 
 
-
-
-
-
-
-
         }
-
 
     }
 }
