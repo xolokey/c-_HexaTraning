@@ -12,7 +12,7 @@ namespace SISApp.DAO
     {
         SqlConnection sqlCon = DBConnUtil.GetConnection("AppSettings.json");
         SqlCommand cmd = new SqlCommand();
-        SqlDataReader dr;
+        //SqlDataReader dr;
         public Courses SaveCourse(Courses course)
         {
             try
@@ -85,6 +85,41 @@ namespace SISApp.DAO
                 Console.WriteLine($"An error occurred while retrieving the course info: {ex.Message}");
             }
         }
+
+        public Courses GetCourseById(int courseId)
+        {
+            try
+            {
+                using (SqlConnection conn = DBConnUtil.GetConnection("AppSettings.json"))
+                {
+                    conn.Open();
+                    string query = "SELECT * FROM Courses WHERE CourseID = @CourseID";
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@CourseID", courseId);
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                return new Courses
+                                {
+                                    CourseID = reader.GetInt32(0),
+                                    CourseName = reader.GetString(1),
+                                    CourseCode = reader.GetString(2),
+                                    InstructorName = reader.GetString(3)
+                                };
+                            }
+                        }
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine($"Error fetching course: {ex.Message}");
+            }
+            return null;
+        }
+
 
     }
 }

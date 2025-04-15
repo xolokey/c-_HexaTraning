@@ -67,6 +67,37 @@ namespace SISApp.DAO
                 Console.WriteLine($"Duplicate enrollment error: {ex.Message}");
             }
         }
+        public Teacher GetTeacherById(int teacherId)
+        {
+            try
+            {
+                using (SqlConnection conn = DBConnUtil.GetConnection("AppSettings.json"))
+                {
+                    conn.Open();
+                    string selectSql = "SELECT TeacherID, FirstName, LastName, Email FROM Teacher WHERE TeacherID = @TeacherID";
+                    using (SqlCommand selectCmd = new SqlCommand(selectSql, conn))
+                    {
+                        selectCmd.Parameters.AddWithValue("@TeacherID", teacherId);
+                        SqlDataReader dr = selectCmd.ExecuteReader();
+                        if (dr.Read())
+                        {
+                            return new Teacher
+                            {
+                                TeacherID = dr.GetInt32(0),
+                                FirstName = dr.GetString(1),
+                                LastName = dr.GetString(2),
+                                Email = dr.GetString(3)
+                            };
+                        }
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine($"SQL Error: {ex.Message}");
+            }
+            return null;
+        }
 
     }
 }
