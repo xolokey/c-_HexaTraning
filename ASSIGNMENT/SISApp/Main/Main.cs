@@ -104,14 +104,7 @@ namespace SISApp.Main
             Console.WriteLine("Payment record inserted successfully.");
 
 
-
-
-
-
-
-
         }
-
 
     }
 }
