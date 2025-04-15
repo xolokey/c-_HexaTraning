@@ -3,16 +3,17 @@
 --create customer table
 
 create table Customer(
-customer_id int identity(100,1) primary key not null,
-first_name varchar(100),
-last_name varchar(100),
-email varchar(100)unique,
-phone_number varchar(100) unique,
-address text,
-username varchar(100) unique,
-password varchar(100),
-registration_date date);
+CustomerID int primary key not null,
+FirstName varchar(100),
+LastName varchar(100),
+Email varchar(100)unique,
+PhoneNumber varchar(100) unique,
+Address text,
+UserName varchar(100) unique,
+Password varchar(100),
+RegistrationDate date);
 
+select* from Customer
 --create vehicle table
 
 create table vehicle(
@@ -27,7 +28,7 @@ dailyrate decimal(10,2));
 
 --create reservation table
 
-create table reservation(
+create table Reservation(
 reservation_id int identity(300,1) primary key not null,
 customer_id int,
 vehicle_id int,
@@ -41,7 +42,7 @@ check (end_date>start_date));
 
 --create admin table
 
-create table admin(
+create table Admin(
 admin_id int identity(400,1) primary key not null,
 first_name varchar(100),
 last_name varchar(100),

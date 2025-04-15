@@ -5,32 +5,31 @@ using Microsoft.Data.SqlClient;
 using SISApp.Util;
 using SISApp.Entities;
 using SISApp.Exception;
+using System.Collections.Generic;
 
 namespace SISApp.DAO
 {
     public class TeacherDao : ITeacherDao<Teacher>
     {
-        SqlConnection sqlCon = DBConnUtil.GetConnection("AppSettings.json");
-        SqlCommand cmd = new SqlCommand();
-        SqlDataReader dr;
-
         public Teacher SaveTeacher(Teacher teacher)
         {
             try
             {
-                cmd.Connection = sqlCon;
-                cmd.CommandText = "INSERT INTO Teacher (TeacherID,FirstName, LastName, Email) VALUES (@TeacherID,@FirstName, @LastName, @Email)";
-                cmd.Parameters.Clear();
-                cmd.Parameters.AddWithValue("@TeacherID", teacher.TeacherID);
-                cmd.Parameters.AddWithValue("@FirstName", teacher.FirstName);
-                cmd.Parameters.AddWithValue("@LastName", teacher.LastName);
-                cmd.Parameters.AddWithValue("@Email", teacher.Email);
-                if (sqlCon.State == System.Data.ConnectionState.Closed)
+                using (SqlConnection sqlCon = DBConnUtil.GetConnection("AppSettings.json"))
                 {
                     sqlCon.Open();
+                    string saveteacher = "INSERT INTO Teacher(TeacherID, FirstName, LastName, Email) VALUES(@TeacherID, @FirstName, @LastName, @Email)";
+                    using (SqlCommand cmd = new SqlCommand(saveteacher,sqlCon))
+                    {
+                        cmd.Parameters.AddWithValue("@TeacherID", teacher.TeacherID);
+                        cmd.Parameters.AddWithValue("@FirstName", teacher.FirstName);
+                        cmd.Parameters.AddWithValue("@LastName", teacher.LastName);
+                        cmd.Parameters.AddWithValue("@Email", teacher.Email);
+                       
+                        cmd.ExecuteNonQuery();
+                        return teacher;
+                    }
                 }
-                cmd.ExecuteNonQuery();
-                return teacher;
             }
             catch (SqlException ex)
             {
