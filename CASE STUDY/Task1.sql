@@ -16,42 +16,55 @@ RegistrationDate date);
 select* from Customer
 --create vehicle table
 
-create table vehicle(
-vehicle_id int identity(200,1) primary key not null,
-model varchar(100),
-make varchar(100),
-year date ,
-color varchar(100),
-registration_number varchar(100) unique,
+create table Vehicle(
+VehicleID int identity(200,1) primary key not null,
+Model varchar(100),
+Make varchar(100),
+Year date ,
+Color varchar(100),
+RegistrationNumber varchar(100) unique,
 Availability tinyint not null default 1,
-dailyrate decimal(10,2));
+DailyRate decimal(10,2));
 
 --create reservation table
 
 create table Reservation(
-reservation_id int identity(300,1) primary key not null,
-customer_id int,
-vehicle_id int,
-start_date date not null,
-end_date date not null,
-totalcost decimal(10,2),
---status enum ('pending','confirmed','canceled') not null default pending,
-foreign key(customer_id) references customer(customer_id) on delete cascade,
-foreign key(vehicle_id) references vehicle(vehicle_id) on delete cascade,
-check (end_date>start_date));
+ReservationID int identity(300,1) primary key not null,
+CustomerID int,
+VehicleID int,
+StartDate date not null,
+EndDate date not null,
+Totalcost decimal(10,2),
+Status Varchar(100),
+foreign key(CustomerID) references Customer(CustomerID) on delete cascade,
+foreign key(VehicleID) references Vehicle(VehicleID) on delete cascade,
+check (EndDate>StartDate));
 
 --create admin table
 
 create table Admin(
-admin_id int identity(400,1) primary key not null,
-first_name varchar(100),
-last_name varchar(100),
-email varchar(100),
-phone_number varchar(100) unique,
-username varchar(100) unique,
-password varchar(100) not null,
-role varchar(100)not null,
-joindate date not null);
+AdminID int identity(400,1) primary key not null,
+FirstName varchar(100),
+LastName varchar(100),
+Email varchar(100),
+PhoneNumber varchar(100) unique,
+UserName varchar(100) unique,
+Password varchar(100) not null,
+Role varchar(100)not null,
+JoinDate date not null);
+
+select* from Customer
+select* from Admin
+select* from Reservation
+select* from Vehicle
+
+delete from Customer
+where CustomerID=101
+
+
+
+
+
 
 --inserting values into customer table
  insert into Customer (first_name,last_name,email,phone_number,address,username,password) values

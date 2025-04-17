@@ -16,6 +16,7 @@ namespace CarConnectApp.Entities
         public string? RegistrationNumber { get; set; }
         public bool Availability { get; set; }
         public decimal DailyRate { get; set; }
+
     }
 
 

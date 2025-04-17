@@ -17,5 +17,10 @@ namespace CarConnectApp.Entities
         public string? Password { get; set; }
         public string? Role { get; set; }
         public DateTime JoinDate { get; set; }
+
+        public bool Authenticate(string inputPassword)
+        {
+            return Password == inputPassword;
+        }
     }
 }

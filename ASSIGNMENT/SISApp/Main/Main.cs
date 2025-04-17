@@ -116,6 +116,7 @@ namespace SISApp.Main
             StudentDao studentDao1 = new StudentDao();
             // Generate Enrollment Report
             studentDao1.GenerateEnrollmentReport(201);
+            Console.WriteLine("Enrollment report generated successfully.");
 
 
 
