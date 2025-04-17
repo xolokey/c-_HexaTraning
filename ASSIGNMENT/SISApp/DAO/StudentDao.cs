@@ -9,6 +9,7 @@ using Microsoft.Identity.Client;
 
 namespace SISApp.DAO
 {
+    //Save Student
     public class StudentDao : IStudentDao<Students>
     {
         public Students SaveStudent(Students student)
@@ -126,7 +127,7 @@ namespace SISApp.DAO
                 Console.WriteLine($"Error generating report: {ex.Message}");
             }
         }
-        //----
+        //Get Student By ID----
         public Students GetStudentById(int studentId)
         {
             try

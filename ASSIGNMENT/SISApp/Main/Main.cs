@@ -12,16 +12,18 @@ namespace SISApp.Main
     {
         public static void Main(string[] args)
         {
+            //Initiating the DAO classes
             StudentDao studentDao = new StudentDao();
             CoursesDao courseDao = new CoursesDao();
             TeacherDao teacherDao = new TeacherDao();
             PaymentDao paymentDao = new PaymentDao();
+            //Creating the While loop for the menu
 
             bool exit = false;
 
             while (!exit)
             {
-                Console.WriteLine("\n=== Student Information System Menu ===");
+                Console.WriteLine("------Student Information System Menu-----");
                 Console.WriteLine("1. Add New Student");
                 Console.WriteLine("2. Add New Course");
                 Console.WriteLine("3. Enroll Student in Course");
@@ -33,8 +35,10 @@ namespace SISApp.Main
                 Console.Write("Choose an option: ");
                 string choice = Console.ReadLine();
 
+                //Creating Switch Cases
                 switch (choice)
                 {
+                    //To Create a Student
                     case "1":
                         Console.Write("Student ID: ");
                         int studentId = int.Parse(Console.ReadLine());
@@ -48,6 +52,7 @@ namespace SISApp.Main
                         string email = Console.ReadLine();
                         Console.Write("Phone Number: ");
                         string phone = Console.ReadLine();
+                        
 
                         Students student = new Students
                         {
@@ -62,8 +67,8 @@ namespace SISApp.Main
                         studentDao.SaveStudent(student);
                         Console.WriteLine("Student saved.");
                         break;
-
                     case "2":
+                        //To Create a Course
                         Console.Write("Course ID: ");
                         int courseId = int.Parse(Console.ReadLine());
                         Console.Write("Course Name: ");
@@ -84,7 +89,7 @@ namespace SISApp.Main
                         courseDao.SaveCourse(course);
                         Console.WriteLine("Course saved.");
                         break;
-
+                    //To Enroll a Student in a Course
                     case "3":
                         Console.Write("Enter Student ID: ");
                         int sId = int.Parse(Console.ReadLine());
@@ -96,7 +101,7 @@ namespace SISApp.Main
                         studentDao.EnrollStudentInCourse(studentToEnroll, courseToEnroll);
                         Console.WriteLine("Student enrolled in course.");
                         break;
-
+                    //To Create a Teacher
                     case "4":
                         Console.Write("Teacher ID: ");
                         int teacherId = int.Parse(Console.ReadLine());
@@ -118,7 +123,7 @@ namespace SISApp.Main
                         teacherDao.SaveTeacher(teacher);
                         Console.WriteLine("Teacher saved.");
                         break;
-
+                    //To Assign a Teacher to a Course
                     case "5":
                         Console.Write("Enter Teacher ID: ");
                         int tId = int.Parse(Console.ReadLine());
@@ -130,7 +135,7 @@ namespace SISApp.Main
                         teacherDao.AssignTeacher(teacherToAssign, courseToAssign);
                         Console.WriteLine("Teacher assigned to course.");
                         break;
-
+                    //To Record a Payment
                     case "6":
                         Console.Write("Enter Student ID: ");
                         int payStudentId = int.Parse(Console.ReadLine());
@@ -142,7 +147,7 @@ namespace SISApp.Main
                         paymentDao.RecordPayment(payStudentId, amount, payDate);
                         Console.WriteLine("Payment recorded successfully.");
                         break;
-
+                    //To Generate an Enrollment Report
                     case "7":
                         Console.Write("Enter Course ID to generate report: ");
                         int reportCourseId = int.Parse(Console.ReadLine());
