@@ -11,18 +11,21 @@ namespace PetPalsApp.Main
 {
     public class Program
     {
-
+        
         static void Main(string[] args)
         {
+            // Initialize DAO implementations
             IPetDao petDao = new PetDaoImpl();
             IDonationDao donationDao = new DonationDaoImpl();
             IAdoptionEventDao eventDao = new AdoptionEventDaoImpl();
 
 
             bool running = true;
+            // Main menu loop
 
             while (running)
             {
+                //Menu Options and Menu Picking ReadLine
                 Console.WriteLine("\n--- PetPals Main Menu ---");
                 Console.WriteLine("1. View Available Pets");
                 Console.WriteLine("2. Make Cash Donation");
@@ -32,10 +35,11 @@ namespace PetPalsApp.Main
 
                 Console.WriteLine("6. Exit");
 
-                Console.Write("Choose an option: ");
+                Console.Write("Choose The Operation That Need To be Performed: ");
                 string input = Console.ReadLine();
                 switch (input)
                 {
+                    // Display available pets
                     case "1":
                         try
                         {
@@ -67,18 +71,18 @@ namespace PetPalsApp.Main
                             Console.WriteLine("[Error] " + ex.Message);
                         }
                         break;
-
+                    // Make a cash donation
                     case "2":
                         try
                         {
-                            Console.Write("Enter donor name: ");
+                            Console.Write("Enter Donor Name: ");
                             string cashDonor = Console.ReadLine();
 
-                            Console.Write("Enter amount (minimum $10): ");
+                            Console.Write("Enter Amount To be Deposited (minimum $10): ");
                             decimal amount = decimal.Parse(Console.ReadLine());
 
                             if (amount < 10)
-                                throw new InsufficientFundsException("Minimum donation amount is $10.");
+                                throw new InsufficientFundsException("Minimum Donation Amount is $10.");
 
                             CashDonation cashDonation = new CashDonation(cashDonor, amount, DateTime.Now);
                             donationDao.InsertCashDonation(cashDonation);
@@ -92,18 +96,18 @@ namespace PetPalsApp.Main
                             Console.WriteLine("[Error] " + ex.Message);
                         }
                         break;
-
+                    // Make an item donation
                     case "3":
                         try
                         {
-                            Console.Write("Enter donor name: ");
+                            Console.Write("Enter Donor Name: ");
                             string itemDonor = Console.ReadLine();
 
-                            Console.Write("Enter item name: ");
+                            Console.Write("Enter Item Name: ");
                             string itemName = Console.ReadLine();
 
                             if (string.IsNullOrEmpty(itemName))
-                                throw new FileHandlingException("Donation item cannot be empty.");
+                                throw new FileHandlingException("Donation item cannot be Empty.");
 
                             ItemDonation itemDonation = new ItemDonation(itemDonor, itemName);
                             donationDao.InsertItemDonation(itemDonation);
@@ -117,15 +121,15 @@ namespace PetPalsApp.Main
                             Console.WriteLine("[Error] " + ex.Message);
                         }
                         break;
-
+                    // Register for an event
                     case "4":
                         try
                         {
-                            Console.Write("Enter pet name to adopt: ");
+                            Console.Write("Enter Pet Name to Adopt: ");
                             string adoptName = Console.ReadLine();
 
                             if (string.IsNullOrEmpty(adoptName))
-                                throw new AdoptionException("Pet name cannot be empty.");
+                                throw new AdoptionException("Pet Name cannot be Empty.");
 
                             petDao.AdoptPet(adoptName);
                         }
@@ -149,10 +153,10 @@ namespace PetPalsApp.Main
                             string ageInput = Console.ReadLine();
 
                             if (!int.TryParse(ageInput, out int petAge))
-                                throw new InvalidPetAgeException("Pet age must be a valid number.");
+                                throw new InvalidPetAgeException("Pet Age must be a valid Number.");
 
                             if (petAge <= 0)
-                                throw new InvalidPetAgeException("Pet age must be a positive number.");
+                                throw new InvalidPetAgeException("Pet Age must be a positive Number.");
 
                             Console.Write("Enter Pet Breed: ");
                             string petBreed = Console.ReadLine();

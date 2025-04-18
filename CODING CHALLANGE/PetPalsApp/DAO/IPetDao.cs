@@ -9,6 +9,7 @@ namespace PetPalsApp.DAO
 {
     public interface IPetDao
     {
+        //Collections for PetDaoImpl
         List<Pet> GetAvailablePets();
         void AdoptPet(string petName);
         void AddNewPet(Pet pet);

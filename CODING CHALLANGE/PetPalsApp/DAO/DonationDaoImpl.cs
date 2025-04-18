@@ -11,12 +11,14 @@ namespace PetPalsApp.DAO
 {
     public class DonationDaoImpl : IDonationDao
     {
+        /// Method to get the next donation ID
         private int GetNextDonationId(SqlConnection conn)
         {
             SqlCommand cmd = new SqlCommand("SELECT ISNULL(MAX(donationid), 0) + 1 FROM donations", conn);
             return (int)cmd.ExecuteScalar();
         }
 
+        //Insert a cash donation into the database
         public void InsertCashDonation(CashDonation donation)
         {
             try
@@ -46,7 +48,7 @@ namespace PetPalsApp.DAO
             }
         }
 
-
+        //Insert an item donation into the database
         public void InsertItemDonation(ItemDonation donation)
         {
             try

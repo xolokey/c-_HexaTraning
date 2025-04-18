@@ -11,6 +11,7 @@ namespace PetPalsApp.DAO
 {
     public class AdoptionEventDaoImpl : IAdoptionEventDao
     {
+        //To List all upcoming events
         public List<AdoptionEvent> GetUpcomingEvents()
         {
             List<AdoptionEvent> events = new List<AdoptionEvent>();
@@ -46,6 +47,7 @@ namespace PetPalsApp.DAO
             return events;
         }
 
+        //To Register a participant for an event
         public void RegisterParticipant(string name, string type, int eventId)
         {
             try

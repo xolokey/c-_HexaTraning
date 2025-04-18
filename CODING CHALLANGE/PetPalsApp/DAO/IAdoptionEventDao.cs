@@ -9,6 +9,7 @@ namespace PetPalsApp.DAO
 {
     public interface IAdoptionEventDao
     {
+        //Collections for AdoptionEventDaoImpl
         List<AdoptionEvent> GetUpcomingEvents();
         void RegisterParticipant(string name, string type, int eventId);
     }

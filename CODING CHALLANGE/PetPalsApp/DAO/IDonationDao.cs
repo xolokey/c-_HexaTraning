@@ -9,6 +9,7 @@ namespace PetPalsApp.DAO
 {
     public interface IDonationDao
     {
+        //Collection fro DonationDaoImpl
         void InsertCashDonation(CashDonation donation);
         void InsertItemDonation(ItemDonation donation);
     }

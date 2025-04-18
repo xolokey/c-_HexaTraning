@@ -17,7 +17,7 @@ namespace PetPalsApp.DAO
             SqlCommand cmd = new SqlCommand("SELECT ISNULL(MAX(petid), 0) + 1 FROM pets", conn);
             return (int)cmd.ExecuteScalar();
         }
-
+        //To Add New Pet
         public void AddNewPet(Pet pet)
         {
             try
@@ -47,7 +47,7 @@ namespace PetPalsApp.DAO
         }
 
 
-
+        //To Adopt a Pet
         public void AdoptPet(string petName)
         {
             try
@@ -73,7 +73,7 @@ namespace PetPalsApp.DAO
                 Console.WriteLine("[DB ERROR - Adopt Pet] " + ex.Message);
             }
         }
-
+        //To List all available pets
         public List<Pet> GetAvailablePets()
         {
             List<Pet> pets = new List<Pet>();
