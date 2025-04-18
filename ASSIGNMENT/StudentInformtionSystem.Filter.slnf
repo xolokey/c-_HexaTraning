@@ -1,0 +1,8 @@
+﻿{
+  "solution": {
+    "path": "C#\\StudentInformtionSystem\\StudentInformtionSystem.sln",
+    "projects": [
+      "StudentInformationSystem\\StudentInformationSystem.csproj"
+    ]
+  }
+}
