@@ -16,6 +16,16 @@ namespace CarConnectApp.Entities
         public decimal TotalCost { get; set; }
         public string? Status { get; set; }
 
+        public decimal CalculateTotalCost(decimal dailyRate)
+        {
+            int totalDays = (EndDate - StartDate).Days;
+            totalDays = totalDays > 0 ? totalDays : 1;
+            TotalCost = totalDays * dailyRate;
+
+            return TotalCost;
+        }
+
+
     }
 
 }

@@ -19,7 +19,14 @@ namespace SISApp.Main
             PaymentDao paymentDao = new PaymentDao();
             //Creating the While loop for the menu
 
+<<<<<<< HEAD
+            StudentDao studentDao1 = new StudentDao();
+            // Generate Enrollment Report
+            studentDao1.GenerateEnrollmentReport(201);
+            Console.WriteLine("Enrollment report generated successfully.");
+=======
             bool exit = false;
+>>>>>>> 0c78449b205fde051a2ecf8de69612a3ac0da930
 
             while (!exit)
             {
