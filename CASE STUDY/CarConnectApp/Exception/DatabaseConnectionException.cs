@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace CarConnectApp.Exception
 {
-    public class Authenticationexception : System.Exception
+    public class DatabaseConnectionException : System.Exception
     {
-        public Authenticationexception(string message) : base(message){ }
-        
+        public DatabaseConnectionException(string message) : base(message) { }
     }
+  
 }

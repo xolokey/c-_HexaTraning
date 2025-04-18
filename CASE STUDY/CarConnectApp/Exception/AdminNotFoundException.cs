@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace CarConnectApp.Exception
 {
-    public class Authenticationexception : System.Exception
+    public class AdminNotFoundException: System.Exception
     {
-        public Authenticationexception(string message) : base(message){ }
-        
+        public AdminNotFoundException(string message) : base(message) { }
     }
 }
