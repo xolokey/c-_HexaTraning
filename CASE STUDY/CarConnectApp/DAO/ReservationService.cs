@@ -88,6 +88,83 @@ namespace CarConnectApp.DAO
             }
             return null;
         }
+        //To Create a Reservation
+        public Reservation CreateReservation(Reservation reservation)
+        {
+            try
+            {
+                using SqlConnection sqlCon = DBConnUtil.GetConnection("AppSettings.json");
+                {
+                    sqlCon.Open();
+                    using (SqlCommand cmd = new SqlCommand("INSERT INTO Reservation (CustomerID, VehicleID, StartDate, EndDate, TotalCost, Status) VALUES (@CustomerID, @VehicleID, @StartDate, @EndDate, @TotalCost, @Status)", sqlCon))
+                    {
+                        cmd.Parameters.AddWithValue("@CustomerID", reservation.CustomerID);
+                        cmd.Parameters.AddWithValue("@VehicleID", reservation.VehicleID);
+                        cmd.Parameters.AddWithValue("@StartDate", reservation.StartDate);
+                        cmd.Parameters.AddWithValue("@EndDate", reservation.EndDate);
+                        cmd.Parameters.AddWithValue("@TotalCost", reservation.TotalCost);
+                        cmd.Parameters.AddWithValue("@Status", reservation.Status);
+                        cmd.ExecuteNonQuery();
+                        return reservation;
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
+            }
+            return null;
 
+        }
+        //To Update Reservation
+        public Reservation UpdateReservation(int reservationId, Reservation reservation)
+        {
+            try
+            {
+                using SqlConnection sqlCon = DBConnUtil.GetConnection("AppSettings.json");
+                {
+                    sqlCon.Open();
+                    using (SqlCommand cmd = new SqlCommand("UPDATE Reservation SET CustomerID = @CustomerID, VehicleID = @VehicleID, StartDate = @StartDate, EndDate = @EndDate, TotalCost = @TotalCost, Status = @Status WHERE ReservationID = @ReservationID", sqlCon))
+                    {
+                        cmd.Parameters.AddWithValue("@ReservationID", reservationId);
+                        cmd.Parameters.AddWithValue("@CustomerID", reservation.CustomerID);
+                        cmd.Parameters.AddWithValue("@VehicleID", reservation.VehicleID);
+                        cmd.Parameters.AddWithValue("@StartDate", reservation.StartDate);
+                        cmd.Parameters.AddWithValue("@EndDate", reservation.EndDate);
+                        cmd.Parameters.AddWithValue("@TotalCost", reservation.TotalCost);
+                        cmd.Parameters.AddWithValue("@Status", reservation.Status);
+                        cmd.ExecuteNonQuery();
+                        return reservation;
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
+            }
+            return null;
+        }
+        //To Cancel Reservation
+        public bool CancelReservation(int reservationId)
+        {
+            try
+            {
+                using SqlConnection sqlCon = DBConnUtil.GetConnection("AppSettings.json");
+                {
+                    sqlCon.Open();
+                    using (SqlCommand cmd = new SqlCommand("DELETE FROM Reservation WHERE ReservationID = @ReservationID", sqlCon))
+                    {
+                        cmd.Parameters.AddWithValue("@ReservationID", reservationId);
+                        int rowsAffected = cmd.ExecuteNonQuery();
+                        return rowsAffected > 0;
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
+            }
+            return false;
+        }
     }
 }

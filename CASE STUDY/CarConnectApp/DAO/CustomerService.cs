@@ -67,7 +67,7 @@ namespace CarConnectApp.DAO
                         {
                             if (reader.Read())
                             {
-                                return new Customer
+                                customer= new Customer
                                 {
                                     CustomerID = (int)reader["CustomerID"],
                                     FirstName = reader["FirstName"].ToString(),
@@ -79,6 +79,7 @@ namespace CarConnectApp.DAO
                                     Password = reader["Password"].ToString(),
                                     RegistrationDate = (DateTime)reader["RegistrationDate"]
                                 };
+                                return customer;
                             }
                         }
                         
@@ -99,6 +100,7 @@ namespace CarConnectApp.DAO
             {
                 using (SqlConnection sqlConnection = DBConnUtil.GetConnection("AppSettings.json"))
                 {
+                    Customer customer = null;
                     sqlConnection.Open();
                     using (SqlCommand cmd = new SqlCommand("SELECT * FROM Customer WHERE UserName = @UserName", sqlConnection))
                     {
@@ -107,7 +109,7 @@ namespace CarConnectApp.DAO
                         {
                             if (reader.Read())
                             {
-                                return new Customer
+                                customer= new Customer
                                 {
                                     CustomerID = (int)reader["CustomerID"],
                                     FirstName = reader["FirstName"].ToString(),
@@ -119,6 +121,7 @@ namespace CarConnectApp.DAO
                                     Password = reader["Password"].ToString(),
                                     RegistrationDate = (DateTime)reader["RegistrationDate"]
                                 };
+                                return customer;
                             }
                         }
                     }

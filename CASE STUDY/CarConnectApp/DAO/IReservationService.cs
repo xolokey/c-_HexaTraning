@@ -8,6 +8,10 @@ namespace CarConnectApp.DAO
 {
     public interface IReservationService<T>
     {
-        T 
+        T GetReservationById(int reservationId);
+        List<T> GetReservationsByCustomerId(int customerId);
+        T CreateReservation(T reservation);
+        T UpdateReservation(int reservationId,T reservation);
+        bool CancelReservation(int reservationId);
     }
 }
