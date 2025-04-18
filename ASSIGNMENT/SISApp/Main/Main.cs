@@ -12,119 +12,165 @@ namespace SISApp.Main
     {
         public static void Main(string[] args)
         {
-            // Create instances of StudentDao and sample data
+            //Initiating the DAO classes
             StudentDao studentDao = new StudentDao();
-
-            // Sample student and course
-            Students student1 = new Students
-            {
-                StudentID = 101,
-                FirstName = "John",
-                LastName = "Doe",
-                DateOfBirth = new DateTime(1995,08 ,15),
-                Email = "john.doe@example.com",
-                PhoneNumber = "123-456-7890"
-            };
-            var newStudent1 = studentDao.SaveStudent(student1);
-            Console.WriteLine(newStudent1 != null ? "Student1 is Saved" : "Error");
-            Console.WriteLine();
-
-            //creating a course
-
             CoursesDao courseDao = new CoursesDao();
-            Courses course1 = new Courses
-            {
-                CourseID =201,
-                CourseName = " Introduction to Programming",
-                CourseCode = "CS102",
-                InstructorName = "Ramesh"
-            };
-            var newCourse1 = courseDao.SaveCourse(course1);
-            Console.WriteLine(newCourse1 != null ? "Course-1 is Saved" : "Error");
-            Console.WriteLine();
-
-            Courses course2 = new Courses
-            {
-                CourseID = 202,
-                CourseName = "Mathematics 101",
-                CourseCode = "MAT201",
-                InstructorName = "Anjali"
-            };
-            var newCourse2 = courseDao.SaveCourse(course2);
-            Console.WriteLine(newCourse2 != null ? "Course-2 is Saved" : "Error");
-            Console.WriteLine();
-
-            Courses course3 = new Courses
-            {
-                CourseID = 203,
-                CourseName = "Advanced Database Management",
-                CourseCode = " CS302",
-                InstructorName = "Sarath"
-            };
-            var newCourse3 = courseDao.SaveCourse(course3);
-            Console.WriteLine(newCourse3 != null ? "Course-3 is Saved" : "Error");
-            Console.WriteLine();
-
-            Courses courses = new Courses
-            {
-                CourseID = 204,
-                CourseName = "Computer Science 101",
-                CourseCode = "CS101",
-                InstructorName = "Ravi"
-            };
-            var newCourse4 = courseDao.SaveCourse(courses);
-            Console.WriteLine(newCourse4 != null ? "Course-4 is Saved" : "Error");
-
-            // Enroll student in course
-            Console.WriteLine("Enrolling student in course...");
-            studentDao.EnrollStudentInCourse(student1, course1);
-            Console.WriteLine($"Student {student1.FirstName} {student1.LastName} successfully enrolled in {course1.CourseName}.");
-            Console.WriteLine();
-
-            //Creating Teacher
             TeacherDao teacherDao = new TeacherDao();
-            Teacher teacher1 = new Teacher
-            {
-                TeacherID = 301,
-                FirstName = "Sarah",
-                LastName = "Smith",
-                Email= "sarah.smith@example.com"
-
-            };
-            var newTeacher1 = teacherDao.SaveTeacher(teacher1);
-            Console.WriteLine(newTeacher1 != null ? "Teacher is Saved" : "Error");
-            Console.WriteLine();
-
-            //Assign teacher to course
-            Console.WriteLine("Assigning teacher to course...");
-            teacherDao.AssignTeacher(teacher1,course3);
-            Console.WriteLine($"Teacher {teacher1.FirstName} {teacher1.LastName} successfully enrolled in {course3.CourseName}.");
-            Console.WriteLine();
-
-            //Get Course Info(Course 1)
-            Console.WriteLine("Displaying course info...");
-            courseDao.DisplayCourseInfo(course1);
-            Console.WriteLine($"Course Info successfully Displayed.");
-            Console.WriteLine();
-
-            //Record Payment Details
-            Console.WriteLine("Inserting Payment Record...");
             PaymentDao paymentDao = new PaymentDao();
-            paymentDao.RecordPayment(101, 500.00m, new DateTime(2023, 4, 10));
-            Console.WriteLine("Payment record inserted successfully.");
+            //Creating the While loop for the menu
 
+<<<<<<< HEAD
             StudentDao studentDao1 = new StudentDao();
             // Generate Enrollment Report
             studentDao1.GenerateEnrollmentReport(201);
             Console.WriteLine("Enrollment report generated successfully.");
+=======
+            bool exit = false;
+>>>>>>> 0c78449b205fde051a2ecf8de69612a3ac0da930
 
+            while (!exit)
+            {
+                Console.WriteLine("------Student Information System Menu-----");
+                Console.WriteLine("1. Add New Student");
+                Console.WriteLine("2. Add New Course");
+                Console.WriteLine("3. Enroll Student in Course");
+                Console.WriteLine("4. Add New Teacher");
+                Console.WriteLine("5. Assign Teacher to Course");
+                Console.WriteLine("6. Record Payment");
+                Console.WriteLine("7. Generate Enrollment Report");
+                Console.WriteLine("8. Exit");
+                Console.Write("Choose an option: ");
+                string choice = Console.ReadLine();
 
+                //Creating Switch Cases
+                switch (choice)
+                {
+                    //To Create a Student
+                    case "1":
+                        Console.Write("Student ID: ");
+                        int studentId = int.Parse(Console.ReadLine());
+                        Console.Write("First Name: ");
+                        string firstName = Console.ReadLine();
+                        Console.Write("Last Name: ");
+                        string lastName = Console.ReadLine();
+                        Console.Write("Date of Birth (yyyy-MM-dd): ");
+                        DateTime dob = DateTime.Parse(Console.ReadLine());
+                        Console.Write("Email: ");
+                        string email = Console.ReadLine();
+                        Console.Write("Phone Number: ");
+                        string phone = Console.ReadLine();
+                        
 
+                        Students student = new Students
+                        {
+                            StudentID = studentId,
+                            FirstName = firstName,
+                            LastName = lastName,
+                            DateOfBirth = dob,
+                            Email = email,
+                            PhoneNumber = phone
+                        };
 
+                        studentDao.SaveStudent(student);
+                        Console.WriteLine("Student saved.");
+                        break;
+                    case "2":
+                        //To Create a Course
+                        Console.Write("Course ID: ");
+                        int courseId = int.Parse(Console.ReadLine());
+                        Console.Write("Course Name: ");
+                        string courseName = Console.ReadLine();
+                        Console.Write("Course Code: ");
+                        string courseCode = Console.ReadLine();
+                        Console.Write("Instructor Name: ");
+                        string instructor = Console.ReadLine();
 
+                        Courses course = new Courses
+                        {
+                            CourseID = courseId,
+                            CourseName = courseName,
+                            CourseCode = courseCode,
+                            InstructorName = instructor
+                        };
 
+                        courseDao.SaveCourse(course);
+                        Console.WriteLine("Course saved.");
+                        break;
+                    //To Enroll a Student in a Course
+                    case "3":
+                        Console.Write("Enter Student ID: ");
+                        int sId = int.Parse(Console.ReadLine());
+                        Console.Write("Enter Course ID: ");
+                        int cId = int.Parse(Console.ReadLine());
 
+                        var studentToEnroll = studentDao.GetStudentById(sId);
+                        var courseToEnroll = courseDao.GetCourseById(cId);
+                        studentDao.EnrollStudentInCourse(studentToEnroll, courseToEnroll);
+                        Console.WriteLine("Student enrolled in course.");
+                        break;
+                    //To Create a Teacher
+                    case "4":
+                        Console.Write("Teacher ID: ");
+                        int teacherId = int.Parse(Console.ReadLine());
+                        Console.Write("First Name: ");
+                        string tFirst = Console.ReadLine();
+                        Console.Write("Last Name: ");
+                        string tLast = Console.ReadLine();
+                        Console.Write("Email: ");
+                        string tEmail = Console.ReadLine();
 
+                        Teacher teacher = new Teacher
+                        {
+                            TeacherID = teacherId,
+                            FirstName = tFirst,
+                            LastName = tLast,
+                            Email = tEmail
+                        };
+
+                        teacherDao.SaveTeacher(teacher);
+                        Console.WriteLine("Teacher saved.");
+                        break;
+                    //To Assign a Teacher to a Course
+                    case "5":
+                        Console.Write("Enter Teacher ID: ");
+                        int tId = int.Parse(Console.ReadLine());
+                        Console.Write("Enter Course ID: ");
+                        int cToAssign = int.Parse(Console.ReadLine());
+
+                        var teacherToAssign = teacherDao.GetTeacherById(tId);
+                        var courseToAssign = courseDao.GetCourseById(cToAssign);
+                        teacherDao.AssignTeacher(teacherToAssign, courseToAssign);
+                        Console.WriteLine("Teacher assigned to course.");
+                        break;
+                    //To Record a Payment
+                    case "6":
+                        Console.Write("Enter Student ID: ");
+                        int payStudentId = int.Parse(Console.ReadLine());
+                        Console.Write("Enter Payment Amount: ");
+                        decimal amount = decimal.Parse(Console.ReadLine());
+                        Console.Write("Enter Payment Date (yyyy-MM-dd): ");
+                        DateTime payDate = DateTime.Parse(Console.ReadLine());
+
+                        paymentDao.RecordPayment(payStudentId, amount, payDate);
+                        Console.WriteLine("Payment recorded successfully.");
+                        break;
+                    //To Generate an Enrollment Report
+                    case "7":
+                        Console.Write("Enter Course ID to generate report: ");
+                        int reportCourseId = int.Parse(Console.ReadLine());
+                        studentDao.GenerateEnrollmentReport(reportCourseId);
+                        break;
+
+                    case "8":
+                        exit = true;
+                        Console.WriteLine("Exiting program...");
+                        break;
+
+                    default:
+                        Console.WriteLine("Invalid option. Try again.");
+                        break;
+                }
+            }
         }
 
 

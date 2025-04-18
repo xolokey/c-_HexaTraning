@@ -12,5 +12,8 @@ namespace SISApp.DAO
         T SaveCourse(T course);
         void DisplayCourseInfo(Courses course);
 
+        T GetCourseById(int courseId);
+
+
     }
 }

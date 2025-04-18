@@ -11,5 +11,7 @@ namespace SISApp.DAO
     {
         T SaveTeacher(T teacher);
         void AssignTeacher(Teacher teacher, Courses course);
+
+        T GetTeacherById(int teacherId);
     }
 }

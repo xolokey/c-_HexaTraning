@@ -9,6 +9,7 @@ using Microsoft.Identity.Client;
 
 namespace SISApp.DAO
 {
+    //Save Student
     public class StudentDao : IStudentDao<Students>
     {
         public Students SaveStudent(Students student)
@@ -126,6 +127,43 @@ namespace SISApp.DAO
                 Console.WriteLine($"Error generating report: {ex.Message}");
             }
         }
+        //Get Student By ID----
+        public Students GetStudentById(int studentId)
+        {
+            try
+            {
+                using (SqlConnection conn = DBConnUtil.GetConnection("AppSettings.json"))
+                {
+                    conn.Open();
+                    string query = "SELECT * FROM Students WHERE StudentID = @StudentID";
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@StudentID", studentId);
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                return new Students
+                                {
+                                    StudentID = reader.GetInt32(0),
+                                    FirstName = reader.GetString(1),
+                                    LastName = reader.GetString(2),
+                                    DateOfBirth = reader.GetDateTime(3),
+                                    Email = reader.GetString(4),
+                                    PhoneNumber = reader.GetString(5)
+                                };
+                            }
+                        }
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine($"Error fetching student: {ex.Message}");
+            }
+            return null;
+        }
+
 
 
     }
