@@ -9,6 +9,7 @@ using CarConnectApp.Entities;
 using Microsoft.Data.SqlClient;
 using Microsoft.Identity.Client;
 using System.Security.Cryptography.Pkcs;
+using CarConnectApp.Exception;
 
 namespace CarConnectApp.DAO
 {
@@ -38,18 +39,17 @@ namespace CarConnectApp.DAO
                     }
                 }
             }
-            catch(SqlException ex)
+            catch (SqlException ex)
             {
                 Console.WriteLine("Error: " + ex.Message);
                 return null;
             }
-            //catch(InvalidCustomerDataException ex)
-            //{
-            //    Console.WriteLine("Error: " + ex.Message);
-            //    return null;
-            //}
-           
+            catch (InvalidInputException ex)
+            {
+                Console.WriteLine("Entered Invalid Input details!!!" + ex.Message);
+                return null;
 
+            }
         }
         //Get Customer by ID
         public Customer GetCustomerById(int customerID)

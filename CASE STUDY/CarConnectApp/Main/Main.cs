@@ -21,8 +21,8 @@ namespace CarConnectApp.Main
             AdminService adminService = new AdminService();
 
             bool exit = false;
-            Console.WriteLine("=== Welcome to CarConnect ===");
-            //
+            Console.WriteLine("======= Welcome to CarConnect =======");
+            //While loop for main menu
 
             while (!exit)
             {
