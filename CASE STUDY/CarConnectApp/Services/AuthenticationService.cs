@@ -9,7 +9,7 @@ using Microsoft.Data.SqlClient;
 
 namespace CarConnectApp.Services
 {
-    public class AuthenticationService
+    public class AuthenticationService:IAuthenticationService
     {
         public Customer AuthenticateCustomer(string username, string password)
         {

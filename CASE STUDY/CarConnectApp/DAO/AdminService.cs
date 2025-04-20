@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using CarConnectApp.Entities;
 using Microsoft.Data.SqlClient;
 using CarConnectApp.Util;
+using CarConnectApp.Exception;
 
 namespace CarConnectApp.DAO
 {
@@ -38,6 +39,11 @@ namespace CarConnectApp.DAO
             catch (SqlException ex)
             {
                 Console.WriteLine("Error: " + ex.Message);
+                return null;
+            }
+            catch (InvalidInputException ex)
+            {
+                Console.WriteLine("Entered Invalid Input details!!!" + ex.Message);
                 return null;
             }
         }
