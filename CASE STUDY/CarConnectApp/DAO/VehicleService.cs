@@ -56,6 +56,7 @@ namespace CarConnectApp.DAO
 
         }
         //To get avilable vehicles
+        // To get available vehicles
         public List<Vehicle> GetAvailableVehicles()
         {
             List<Vehicle> availableVehicles = new List<Vehicle>();
@@ -75,10 +76,10 @@ namespace CarConnectApp.DAO
                                     VehicleID = reader.GetInt32(0),
                                     Make = reader.GetString(1),
                                     Model = reader.GetString(2),
-                                    Year = reader.GetInt32(3),
+                                    Year = reader.GetDateTime(3).Year, // Extract the year from DateTime
                                     Color = reader.GetString(4),
                                     RegistrationNumber = reader.GetString(5),
-                                    Availability = reader.GetBoolean(6),
+                                    Availability = reader.GetByte(6) == 1, // Convert byte to bool
                                     DailyRate = reader.GetDecimal(7)
                                 };
                                 availableVehicles.Add(vehicle);
@@ -93,6 +94,7 @@ namespace CarConnectApp.DAO
             }
             return availableVehicles;
         }
+
         //To Add Vehicle
         public Vehicle AddVehicle(Vehicle vehicle)
         {
