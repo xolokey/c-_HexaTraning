@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CarConnectApp.Entities;
 using CarConnectApp.Util;
 using Microsoft.Data.SqlClient;
@@ -10,18 +7,15 @@ using Microsoft.Data.SqlClient;
 namespace CarConnectApp.DAO
 {
     public class VehicleService : IVehicleService<Vehicle>
-
     {
-        //To Get Vehicle by ID
+        // To Get Vehicle by ID
         public Vehicle GetVehicleById(int vehicleId)
         {
             try
             {
                 using SqlConnection sqlCon = DBConnUtil.GetConnection("AppSettings.json");
                 {
-                    Vehicle vehicle = null;
                     sqlCon.Open();
-
                     using (SqlCommand cmd = new SqlCommand("SELECT * FROM Vehicle WHERE VehicleID = @VehicleID", sqlCon))
                     {
                         cmd.Parameters.AddWithValue("@VehicleID", vehicleId);
@@ -29,34 +23,31 @@ namespace CarConnectApp.DAO
                         {
                             if (reader.Read())
                             {
-                                vehicle = new Vehicle
+                                return new Vehicle
                                 {
                                     VehicleID = reader.GetInt32(0),
                                     Make = reader.GetString(1),
                                     Model = reader.GetString(2),
-                                    Year = reader.GetInt32(3),
+                                    Year = reader.GetDateTime(3).Year, // Extract the year from DateTime
                                     Color = reader.GetString(4),
                                     RegistrationNumber = reader.GetString(5),
-                                    Availability = reader.GetBoolean(6),
+                                    Availability = reader.GetByte(6) == 1, // Consistent handling
                                     DailyRate = reader.GetDecimal(7)
-
                                 };
                             }
                         }
                     }
-                    return vehicle;
                 }
-
             }
             catch (SqlException ex)
             {
                 Console.WriteLine("Error: " + ex.Message);
             }
             return null;
-
         }
-        //To get avilable vehicles
-        // To get available vehicles
+
+
+        // To Get Available Vehicles
         public List<Vehicle> GetAvailableVehicles()
         {
             List<Vehicle> availableVehicles = new List<Vehicle>();
@@ -71,7 +62,7 @@ namespace CarConnectApp.DAO
                         {
                             while (reader.Read())
                             {
-                                Vehicle vehicle = new Vehicle
+                                availableVehicles.Add(new Vehicle
                                 {
                                     VehicleID = reader.GetInt32(0),
                                     Make = reader.GetString(1),
@@ -79,10 +70,9 @@ namespace CarConnectApp.DAO
                                     Year = reader.GetDateTime(3).Year, // Extract the year from DateTime
                                     Color = reader.GetString(4),
                                     RegistrationNumber = reader.GetString(5),
-                                    Availability = reader.GetByte(6) == 1, // Convert byte to bool
+                                    Availability = reader.GetByte(6) == 1, // Consistent handling
                                     DailyRate = reader.GetDecimal(7)
-                                };
-                                availableVehicles.Add(vehicle);
+                                });
                             }
                         }
                     }
@@ -95,7 +85,7 @@ namespace CarConnectApp.DAO
             return availableVehicles;
         }
 
-        //To Add Vehicle
+        // To Add Vehicle
         public Vehicle AddVehicle(Vehicle vehicle)
         {
             try
@@ -123,7 +113,8 @@ namespace CarConnectApp.DAO
             }
             return null;
         }
-        //To Update Vehicle
+
+        // To Update Vehicle
         public Vehicle UpdateVehicle(int vehicleID)
         {
             try
@@ -140,56 +131,66 @@ namespace CarConnectApp.DAO
                 Console.WriteLine("\n--- Update Vehicle Details ---");
 
                 Console.Write("Enter Make (" + vehicle.Make + "): ");
-                vehicle.Make = Console.ReadLine();
+                string? make = Console.ReadLine();
+                vehicle.Make = string.IsNullOrWhiteSpace(make) ? vehicle.Make : make;
 
                 Console.Write("Enter Model (" + vehicle.Model + "): ");
-                vehicle.Model = Console.ReadLine();
+                string? model = Console.ReadLine();
+                vehicle.Model = string.IsNullOrWhiteSpace(model) ? vehicle.Model : model;
 
                 Console.Write("Enter Year (" + vehicle.Year + "): ");
-                vehicle.Year = int.Parse(Console.ReadLine());
+                if (int.TryParse(Console.ReadLine(), out int year))
+                {
+                    vehicle.Year = year;
+                }
 
                 Console.Write("Enter Color (" + vehicle.Color + "): ");
-                vehicle.Color = Console.ReadLine();
+                string? color = Console.ReadLine();
+                vehicle.Color = string.IsNullOrWhiteSpace(color) ? vehicle.Color : color;
 
                 Console.Write("Enter Registration Number (" + vehicle.RegistrationNumber + "): ");
-                vehicle.RegistrationNumber = Console.ReadLine();
+                string? regNumber = Console.ReadLine();
+                vehicle.RegistrationNumber = string.IsNullOrWhiteSpace(regNumber) ? vehicle.RegistrationNumber : regNumber;
 
                 Console.Write("Is Available (true/false) (" + vehicle.Availability + "): ");
-                vehicle.Availability = bool.Parse(Console.ReadLine());
+                if (bool.TryParse(Console.ReadLine(), out bool availability))
+                {
+                    vehicle.Availability = availability;
+                }
 
                 Console.Write("Enter Daily Rate (" + vehicle.DailyRate + "): ");
-                vehicle.DailyRate = decimal.Parse(Console.ReadLine());
+                if (decimal.TryParse(Console.ReadLine(), out decimal dailyRate))
+                {
+                    vehicle.DailyRate = dailyRate;
+                }
 
                 using SqlConnection sqlCon = DBConnUtil.GetConnection("AppSettings.json");
                 {
                     sqlCon.Open();
-                    using SqlCommand cmd = new SqlCommand(@"UPDATE Vehicle 
-                SET Make = @Make, Model = @Model, Year = @Year, Color = @Color, 
-                    RegistrationNumber = @RegistrationNumber, Availability = @Availability, DailyRate = @DailyRate 
-                WHERE VehicleID = @VehicleID", sqlCon)
+                    using (SqlCommand cmd = new SqlCommand(@"UPDATE Vehicle 
+                        SET Make = @Make, Model = @Model, Year = @Year, Color = @Color, 
+                            RegistrationNumber = @RegistrationNumber, Availability = @Availability, DailyRate = @DailyRate 
+                        WHERE VehicleID = @VehicleID", sqlCon))
                     {
-                        Parameters =
-                {
-                    new SqlParameter("@VehicleID", vehicle.VehicleID),
-                    new SqlParameter("@Make", vehicle.Make),
-                    new SqlParameter("@Model", vehicle.Model),
-                    new SqlParameter("@Year", vehicle.Year),
-                    new SqlParameter("@Color", vehicle.Color),
-                    new SqlParameter("@RegistrationNumber", vehicle.RegistrationNumber),
-                    new SqlParameter("@Availability", vehicle.Availability),
-                    new SqlParameter("@DailyRate", vehicle.DailyRate)
-                }
-                    };
+                        cmd.Parameters.AddWithValue("@VehicleID", vehicle.VehicleID);
+                        cmd.Parameters.AddWithValue("@Make", vehicle.Make);
+                        cmd.Parameters.AddWithValue("@Model", vehicle.Model);
+                        cmd.Parameters.AddWithValue("@Year", vehicle.Year);
+                        cmd.Parameters.AddWithValue("@Color", vehicle.Color);
+                        cmd.Parameters.AddWithValue("@RegistrationNumber", vehicle.RegistrationNumber);
+                        cmd.Parameters.AddWithValue("@Availability", vehicle.Availability);
+                        cmd.Parameters.AddWithValue("@DailyRate", vehicle.DailyRate);
 
-                    int rowsAffected = cmd.ExecuteNonQuery();
-                    if (rowsAffected > 0)
-                    {
-                        Console.WriteLine("Vehicle updated successfully.");
-                        return vehicle;
-                    }
-                    else
-                    {
-                        Console.WriteLine("Update failed.");
+                        int rowsAffected = cmd.ExecuteNonQuery();
+                        if (rowsAffected > 0)
+                        {
+                            Console.WriteLine("Vehicle updated successfully.");
+                            return vehicle;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Update failed.");
+                        }
                     }
                 }
             }
@@ -204,7 +205,8 @@ namespace CarConnectApp.DAO
 
             return null;
         }
-        //To Delete Vehicle
+
+        // To Delete Vehicle
         public bool RemoveVehicle(int vehicleID)
         {
             try
@@ -226,7 +228,5 @@ namespace CarConnectApp.DAO
             }
             return false;
         }
-
-
     }
 }
