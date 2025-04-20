@@ -85,6 +85,10 @@ namespace CarConnectApp.DAO
             {
                 Console.WriteLine("Error: " + ex.Message);
             }
+            catch (AdminNotFoundException ex)
+            {
+                Console.WriteLine("There is No Admin with AdminID!!!" + ex.Message);
+            }
             return null;
         }
         //Get Admin by Username
@@ -125,6 +129,10 @@ namespace CarConnectApp.DAO
             {
                 Console.WriteLine("Error: " + ex.Message);
             }
+            catch (AdminNotFoundException ex)
+            {
+                Console.WriteLine("There is No Admin with Username!!!" + ex.Message);
+            }
             return null;
         }
         //To Update Admin
@@ -155,6 +163,11 @@ namespace CarConnectApp.DAO
                 Console.WriteLine("Error: " + ex.Message);
                 return null;
             }
+            catch (InvalidInputException ex)
+            {
+                Console.WriteLine("Entered Invalid Input details!!!" + ex.Message);
+                return null;
+            }
         }
         //To Delete Admin
         public bool DeleteAdmin(int adminID)
@@ -175,6 +188,16 @@ namespace CarConnectApp.DAO
             catch (SqlException ex)
             {
                 Console.WriteLine("Error: " + ex.Message);
+                return false;
+            }
+            catch (DatabaseConnectionException ex)
+            { 
+                Console.WriteLine("Database Connection Error: " + ex.Message);
+                return false;
+            }
+            catch (AdminNotFoundException ex)
+            {
+                Console.WriteLine("There is No Admin with AdminID!!!" + ex.Message);
                 return false;
             }
         }

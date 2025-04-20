@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using CarConnectApp.Util;
 using CarConnectApp.Entities;
 using Microsoft.Data.SqlClient;
+using CarConnectApp.Exception;
 
 namespace CarConnectApp.DAO
 {
@@ -46,6 +47,10 @@ namespace CarConnectApp.DAO
             catch (SqlException ex)
             {
                 Console.WriteLine("Error: " + ex.Message);
+            }
+            catch (InvalidInputException ex)
+            {
+                Console.WriteLine("Invalid Exception Error: " + ex.Message);
             }
             return null;
         }
@@ -113,6 +118,10 @@ namespace CarConnectApp.DAO
             {
                 Console.WriteLine("Error: " + ex.Message);
             }
+            catch (ReservationException ex)
+            {
+                Console.WriteLine("Reservation Exception Error: " + ex.Message);
+            }
             return null;
 
         }
@@ -141,6 +150,10 @@ namespace CarConnectApp.DAO
             catch (SqlException ex)
             {
                 Console.WriteLine("Error: " + ex.Message);
+            }
+            catch (ReservationException ex)
+            {
+                Console.WriteLine("Reservation Exception Error: " + ex.Message);
             }
             return null;
         }

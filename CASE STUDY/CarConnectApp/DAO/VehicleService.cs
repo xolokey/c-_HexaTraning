@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using CarConnectApp.Entities;
+using CarConnectApp.Exception;
 using CarConnectApp.Util;
 using Microsoft.Data.SqlClient;
 
@@ -44,6 +46,7 @@ namespace CarConnectApp.DAO
                 Console.WriteLine("Error: " + ex.Message);
             }
             return null;
+          
         }
 
 
@@ -198,9 +201,9 @@ namespace CarConnectApp.DAO
             {
                 Console.WriteLine("SQL Error: " + ex.Message);
             }
-            catch (FormatException)
+            catch (VehicleNotFoundException ex)
             {
-                Console.WriteLine("Invalid input format.");
+                Console.WriteLine("Invalid input format."+ ex.Message);
             }
 
             return null;
@@ -225,6 +228,10 @@ namespace CarConnectApp.DAO
             catch (SqlException ex)
             {
                 Console.WriteLine("Error: " + ex.Message);
+            }
+            catch (VehicleNotFoundException ex)
+            {
+                Console.WriteLine("Invalid input format." + ex.Message);
             }
             return false;
         }
