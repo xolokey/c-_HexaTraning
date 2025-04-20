@@ -381,7 +381,7 @@ namespace CarConnectApp.Main
 
                     case "4":
                         exit = true;
-                        Console.WriteLine("------Thank you for using CarConnect. VisitAgain!---------");
+                        Console.WriteLine("------Thank you for using CarConnect. VisitAgain!!!---------");
                         break;
 
                     default:
