@@ -40,7 +40,7 @@ namespace CarConnectAppTest
                 VehicleID = 1,
                 Make = "Toyota",
                 Model = "Camry",
-                Year = 2020,
+                Year = new DateTime(2020 - 01 - 01),
                 RegistrationNumber = "XYZ1234",
                 DailyRate = 50.0m,
                 Availability = true
@@ -50,7 +50,7 @@ namespace CarConnectAppTest
                 VehicleID = 2,
                 Make = "Honda",
                 Model = "Civic",
-                Year = 2021,
+                Year = new DateTime(2021 - 01 - 01),
                 RegistrationNumber = "ABC5678",
                 DailyRate = 60.0m,
                 Availability = false // Not available
@@ -60,7 +60,7 @@ namespace CarConnectAppTest
                 VehicleID = 3,
                 Make = "Ford",
                 Model = "Focus",
-                Year = 2022,
+                Year = new DateTime(2022 - 01 - 01),
                 RegistrationNumber = "DEF9012",
                 DailyRate = 45.0m,
                 Availability = true
@@ -88,7 +88,7 @@ namespace CarConnectAppTest
                 VehicleID = 1,
                 Make = "Toyota",
                 Model = "Camry",
-                Year = 2020,
+                Year = new DateTime(2020 - 01 - 01),
                 RegistrationNumber = "XYZ1234",
                 DailyRate = 50.0m,
                 Availability = false
@@ -98,7 +98,7 @@ namespace CarConnectAppTest
                 VehicleID = 2,
                 Make = "Honda",
                 Model = "Civic",
-                Year = 2021,
+                Year = new DateTime(2021 - 01 - 01),
                 RegistrationNumber = "ABC5678",
                 DailyRate = 60.0m,
                 Availability = false

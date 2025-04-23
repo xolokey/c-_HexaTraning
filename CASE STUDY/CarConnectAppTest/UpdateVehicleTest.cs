@@ -47,7 +47,7 @@ namespace CarConnectAppTest
             {
                 Make = "Toyota",
                 Model = "Camry",
-                Year = 2020,
+                Year = new DateTime(2020 - 01 - 01),
                 RegistrationNumber = "XYZ1234",
                 DailyRate = 50.0m
             };

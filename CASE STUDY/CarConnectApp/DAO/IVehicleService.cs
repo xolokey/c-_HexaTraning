@@ -13,6 +13,6 @@ namespace CarConnectApp.DAO
         T AddVehicle(T vehicle);
         T UpdateVehicle(int vehicleID);
         bool RemoveVehicle(int vehicleID);
-
+        List<T> GetAllVehicles();
     }
 }

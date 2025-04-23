@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq.Expressions;
 using CarConnectApp.Entities;
-using CarConnectApp.Exception;
 using CarConnectApp.Util;
 using Microsoft.Data.SqlClient;
 
@@ -30,10 +28,10 @@ namespace CarConnectApp.DAO
                                     VehicleID = reader.GetInt32(0),
                                     Make = reader.GetString(1),
                                     Model = reader.GetString(2),
-                                    Year = reader.GetDateTime(3).Year, // Extract the year from DateTime
+                                    Year = reader.GetDateTime(3), // Treat Year as an int
                                     Color = reader.GetString(4),
                                     RegistrationNumber = reader.GetString(5),
-                                    Availability = reader.GetByte(6) == 1, // Consistent handling
+                                    Availability = reader.GetBoolean(6), // Use GetBoolean for Availability
                                     DailyRate = reader.GetDecimal(7)
                                 };
                             }
@@ -46,9 +44,7 @@ namespace CarConnectApp.DAO
                 Console.WriteLine("Error: " + ex.Message);
             }
             return null;
-          
         }
-
 
         // To Get Available Vehicles
         public List<Vehicle> GetAvailableVehicles()
@@ -70,7 +66,7 @@ namespace CarConnectApp.DAO
                                     VehicleID = reader.GetInt32(0),
                                     Make = reader.GetString(1),
                                     Model = reader.GetString(2),
-                                    Year = reader.GetDateTime(3).Year, // Extract the year from DateTime
+                                    Year = reader.GetDateTime(3), // Extract the year from DateTime
                                     Color = reader.GetString(4),
                                     RegistrationNumber = reader.GetString(5),
                                     Availability = reader.GetByte(6) == 1, // Consistent handling
@@ -100,7 +96,7 @@ namespace CarConnectApp.DAO
                     {
                         cmd.Parameters.AddWithValue("@Make", vehicle.Make);
                         cmd.Parameters.AddWithValue("@Model", vehicle.Model);
-                        cmd.Parameters.AddWithValue("@Year", vehicle.Year);
+                        cmd.Parameters.AddWithValue("@Year", vehicle.Year); // Pass Year as an int
                         cmd.Parameters.AddWithValue("@Color", vehicle.Color);
                         cmd.Parameters.AddWithValue("@RegistrationNumber", vehicle.RegistrationNumber);
                         cmd.Parameters.AddWithValue("@Availability", vehicle.Availability);
@@ -142,7 +138,7 @@ namespace CarConnectApp.DAO
                 vehicle.Model = string.IsNullOrWhiteSpace(model) ? vehicle.Model : model;
 
                 Console.Write("Enter Year (" + vehicle.Year + "): ");
-                if (int.TryParse(Console.ReadLine(), out int year))
+                if (DateTime.TryParse(Console.ReadLine(), out DateTime year))
                 {
                     vehicle.Year = year;
                 }
@@ -178,7 +174,7 @@ namespace CarConnectApp.DAO
                         cmd.Parameters.AddWithValue("@VehicleID", vehicle.VehicleID);
                         cmd.Parameters.AddWithValue("@Make", vehicle.Make);
                         cmd.Parameters.AddWithValue("@Model", vehicle.Model);
-                        cmd.Parameters.AddWithValue("@Year", vehicle.Year);
+                        cmd.Parameters.AddWithValue("@Year", vehicle.Year); // Pass Year as an int
                         cmd.Parameters.AddWithValue("@Color", vehicle.Color);
                         cmd.Parameters.AddWithValue("@RegistrationNumber", vehicle.RegistrationNumber);
                         cmd.Parameters.AddWithValue("@Availability", vehicle.Availability);
@@ -200,10 +196,6 @@ namespace CarConnectApp.DAO
             catch (SqlException ex)
             {
                 Console.WriteLine("SQL Error: " + ex.Message);
-            }
-            catch (VehicleNotFoundException ex)
-            {
-                Console.WriteLine("Invalid input format."+ ex.Message);
             }
 
             return null;
@@ -229,11 +221,37 @@ namespace CarConnectApp.DAO
             {
                 Console.WriteLine("Error: " + ex.Message);
             }
-            catch (VehicleNotFoundException ex)
-            {
-                Console.WriteLine("Invalid input format." + ex.Message);
-            }
             return false;
         }
+
+        public List<Vehicle> GetAllVehicles()
+        {
+            List<Vehicle> vehicleList = new List<Vehicle>();
+            using SqlConnection conn = DBConnUtil.GetConnection("AppSettings.json");
+            {
+                conn.Open();
+                string query = "SELECT * FROM Vehicle";
+                using SqlCommand cmd = new SqlCommand(query, conn);
+                using SqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    Vehicle vehicle = new Vehicle
+                    {
+                        VehicleID = reader.GetInt32(0),
+                        Make = reader.GetString(1),
+                        Model = reader.GetString(2),
+                        Year = reader.GetDateTime(3),
+                        Color = reader.GetString(4),
+                        RegistrationNumber = reader.GetString(5),
+                        Availability = reader.GetByte(6) == 1,  //  Safely converting from byte to bool
+                        DailyRate = reader.GetDecimal(7)
+                    };
+                    vehicleList.Add(vehicle);
+                }
+            }
+            return vehicleList;
+        }
+
+
     }
 }

@@ -11,7 +11,7 @@ namespace CarConnectApp.Entities
         public int VehicleID { get; set; }
         public string? Model { get; set; }
         public string? Make { get; set; }
-        public int Year { get; set; }
+        public DateTime Year { get; set; }
         public string? Color { get; set; }
         public string? RegistrationNumber { get; set; }
         public bool Availability { get; set; }

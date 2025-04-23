@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CarConnectApp.Exception
 {
-    public class Authenticationexception : System.Exception
+    public class AuthenticationException : System.Exception
     {
-        public Authenticationexception(string message) : base(message){ }
-        
+        public AuthenticationException(string message) : base(message) { }
+
+        public AuthenticationException(string message, System.Exception innerException) : base(message, innerException) { }
     }
 }
+

@@ -1,21 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CarConnectApp.Entities;
 using CarConnectApp.Util;
+using CarConnectApp.Exception; // Import the Exception namespace
 using Microsoft.Data.SqlClient;
 
 namespace CarConnectApp.Services
 {
-    public class AuthenticationService:IAuthenticationService
+    public class AuthenticationService : IAuthenticationService
     {
         public Customer AuthenticateCustomer(string username, string password)
         {
-            using SqlConnection sqlCon = DBConnUtil.GetConnection("AppSettings.json");
+            try
             {
+                using SqlConnection sqlCon = DBConnUtil.GetConnection("AppSettings.json");
                 sqlCon.Open();
+
                 string query = "SELECT * FROM Customer WHERE Username = @Username AND Password = @Password";
                 using SqlCommand cmd = new SqlCommand(query, sqlCon);
                 cmd.Parameters.AddWithValue("@Username", username);
@@ -40,19 +39,26 @@ namespace CarConnectApp.Services
                 }
                 else
                 {
-                    Console.WriteLine("Customer authentication failed: Invalid username or password.");
+                    throw new AuthenticationException("Invalid username or password for customer.");
                 }
             }
-            return null;
+            catch (SqlException ex)
+            {
+                throw new AuthenticationException("Database error during customer authentication.", ex);
+            }
+            catch (System.Exception ex) // Fully qualify System.Exception
+            {
+                throw new AuthenticationException("Unexpected error during customer authentication.", ex);
+            }
         }
 
-        // Authenticate Admin
         public Admin AuthenticateAdmin(string username, string password)
         {
-            using SqlConnection sqlCon = DBConnUtil.GetConnection("AppSettings.json");
+            try
             {
-                Admin admin = null;
+                using SqlConnection sqlCon = DBConnUtil.GetConnection("AppSettings.json");
                 sqlCon.Open();
+
                 string query = "SELECT * FROM Admin WHERE Username = @Username AND Password = @Password";
                 using SqlCommand cmd = new SqlCommand(query, sqlCon);
                 cmd.Parameters.AddWithValue("@Username", username);
@@ -77,10 +83,18 @@ namespace CarConnectApp.Services
                 }
                 else
                 {
-                    Console.WriteLine("Admin authentication failed: Invalid username or password.");
+                    throw new AuthenticationException("Invalid username or password for admin.");
                 }
             }
-            return null;
+            catch (SqlException ex)
+            {
+                throw new AuthenticationException("Database error during admin authentication.", ex);
+            }
+            catch (System.Exception ex) // Fully qualify System.Exception
+            {
+                throw new AuthenticationException("Unexpected error during admin authentication.", ex);
+            }
         }
     }
 }
+
