@@ -1,6 +1,7 @@
 ﻿using System;
 using CarConnectApp.Entities;
 using CarConnectApp.Util;
+using CarConnectApp.Exception; // Import the Exception namespace
 using Microsoft.Data.SqlClient;
 
 namespace CarConnectApp.Services
@@ -38,16 +39,16 @@ namespace CarConnectApp.Services
                 }
                 else
                 {
-                    throw new CarConnectApp.Exception.AuthenticationException("Invalid username or password for customer.");
+                    throw new AuthenticationException("Invalid username or password for customer.");
                 }
             }
             catch (SqlException ex)
             {
-                throw new CarConnectApp.Exception.AuthenticationException("Database error during customer authentication.", ex);
+                throw new AuthenticationException("Database error during customer authentication.", ex);
             }
-            catch (Exception ex)
+            catch (System.Exception ex) // Fully qualify System.Exception
             {
-                throw new CarConnectApp.Exception.AuthenticationException("Unexpected error during customer authentication.", ex);
+                throw new AuthenticationException("Unexpected error during customer authentication.", ex);
             }
         }
 
@@ -82,16 +83,16 @@ namespace CarConnectApp.Services
                 }
                 else
                 {
-                    throw new CarConnectApp.Exception.AuthenticationException("Invalid username or password for admin.");
+                    throw new AuthenticationException("Invalid username or password for admin.");
                 }
             }
             catch (SqlException ex)
             {
-                throw new CarConnectApp.Exception.AuthenticationException("Database error during admin authentication.", ex);
+                throw new AuthenticationException("Database error during admin authentication.", ex);
             }
-            catch (Exception ex)
+            catch (System.Exception ex) // Fully qualify System.Exception
             {
-                throw new CarConnectApp.Exception.AuthenticationException("Unexpected error during admin authentication.", ex);
+                throw new AuthenticationException("Unexpected error during admin authentication.", ex);
             }
         }
     }

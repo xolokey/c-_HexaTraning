@@ -32,15 +32,15 @@ namespace CarConnectApp.Main
                 Console.WriteLine("3. Register as New Customer");
                 Console.WriteLine("4. Exit");
                 Console.Write("Enter your choice: ");
-                string mainChoice = Console.ReadLine();
+                string mainChoice = Console.ReadLine() ?? string.Empty;
 
                 switch (mainChoice)
                 {
                     case "1":
                         Console.Write("Admin Username: ");
-                        string adminUsername = Console.ReadLine();
+                        string adminUsername = Console.ReadLine() ?? string.Empty;
                         Console.Write("Admin Password: ");
-                        string adminPassword = Console.ReadLine();
+                        string adminPassword = Console.ReadLine() ?? string.Empty;
 
                         var admin = authService.AuthenticateAdmin(adminUsername, adminPassword);
                         if (admin != null)
@@ -61,38 +61,62 @@ namespace CarConnectApp.Main
                                 Console.WriteLine("10. Delete Customer");
                                 Console.WriteLine("11. Exit Admin Menu");                                
                                 Console.Write("Choose option: ");
-                                string adminChoice = Console.ReadLine();
+                                string adminChoice = Console.ReadLine() ?? string.Empty;
 
                                 switch (adminChoice)
                                 {
                                     case "1":
                                         Console.WriteLine("Enter new vehicle details:");
-                                        Console.Write("Vehicle ID: "); int newVehicleId = int.Parse(Console.ReadLine());
-                                        Console.Write("Make: "); string make = Console.ReadLine();
-                                        Console.Write("Model: "); string model = Console.ReadLine();
-                                        Console.Write("Year: "); int year = int.Parse(Console.ReadLine());
-                                        Console.Write("Color: "); string color = Console.ReadLine();
-                                        Console.Write("Registration Number: "); string regNo = Console.ReadLine();
-                                        Console.Write("Is Available (true/false): "); bool available = bool.Parse(Console.ReadLine());
-                                        Console.Write("Daily Rate: "); decimal rate = decimal.Parse(Console.ReadLine());
+                                        Console.Write("Vehicle ID: ");
+                                        int newVehicleId = int.Parse(Console.ReadLine() ?? string.Empty);
+                                        Console.Write("Make: ");
+                                        string make = Console.ReadLine() ?? string.Empty;
+                                        Console.Write("Model: ");
+                                        string model = Console.ReadLine() ?? string.Empty;
+                                        Console.Write("Year (e.g., 2022): ");
+
+                                        DateTime manufactureDate;
+                                        if (int.TryParse(Console.ReadLine(), out int year))
+                                        {
+                                            // Set the manufacture date with January 1st of the provided year
+                                            manufactureDate = new DateTime(year, 1, 1);
+                                        }
+                                        else
+                                        {
+                                            Console.WriteLine("Invalid input. Please enter a valid numeric year.");
+                                            return; // Exit if the year is invalid
+                                        }
+
+                                        Console.Write("Color: ");
+                                        string color = Console.ReadLine() ?? string.Empty;
+                                        Console.Write("Registration Number: ");
+                                        string regNo = Console.ReadLine() ?? string.Empty;
+                                        Console.Write("Is Available (true/false): ");
+                                        bool available = bool.Parse(Console.ReadLine() ?? string.Empty);
+                                        Console.Write("Daily Rate: ");
+                                        decimal rate = decimal.Parse(Console.ReadLine() ?? string.Empty);
 
                                         Vehicle newVehicle = new Vehicle
                                         {
                                             VehicleID = newVehicleId,
                                             Make = make,
                                             Model = model,
-                                            Year = year,
+                                            Year = manufactureDate, // Use the full date (January 1st of the year)
                                             Color = color,
                                             RegistrationNumber = regNo,
                                             Availability = available,
                                             DailyRate = rate
                                         };
+
+                                        // Assuming you have a vehicleService to add the new vehicle
                                         vehicleService.AddVehicle(newVehicle);
+                                        Console.WriteLine("Vehicle added successfully.");
+
                                         break;
 
                                     case "2":
                                         Console.Write("Enter Vehicle ID to update: ");
-                                        int updateId = int.Parse(Console.ReadLine());
+                                        int updateId = int.Parse(Console.ReadLine() ?? string.Empty);
                                         vehicleService.UpdateVehicle(updateId);
                                         break;
 
@@ -107,13 +131,13 @@ namespace CarConnectApp.Main
 
                                     case "4":
                                         Console.WriteLine("Enter new admin details:");
-                                        Console.Write("First Name: "); string afn = Console.ReadLine();
-                                        Console.Write("Last Name: "); string aln = Console.ReadLine();
-                                        Console.Write("Email: "); string aemail = Console.ReadLine();
-                                        Console.Write("Phone: "); string aphone = Console.ReadLine();
-                                        Console.Write("Username: "); string auser = Console.ReadLine();
-                                        Console.Write("Password: "); string apass = Console.ReadLine();
-                                        Console.Write("Role: "); string role = Console.ReadLine();
+                                        Console.Write("First Name: "); string afn = Console.ReadLine() ?? string.Empty;
+                                        Console.Write("Last Name: "); string aln = Console.ReadLine() ?? string.Empty;
+                                        Console.Write("Email: "); string aemail = Console.ReadLine() ?? string.Empty;
+                                        Console.Write("Phone: "); string aphone = Console.ReadLine() ?? string.Empty;
+                                        Console.Write("Username: "); string auser = Console.ReadLine() ?? string.Empty;
+                                        Console.Write("Password: "); string apass = Console.ReadLine() ?? string.Empty;
+                                        Console.Write("Role: "); string role = Console.ReadLine() ?? string.Empty;
 
                                         Admin newAdmin = new Admin
                                         {
@@ -132,14 +156,14 @@ namespace CarConnectApp.Main
 
                                     case "5":
                                         Console.Write("Enter Reservation ID to update: ");
-                                        int resId = int.Parse(Console.ReadLine());
+                                        int resId = int.Parse(Console.ReadLine() ?? string.Empty);
                                         Reservation existingRes = reservationService.GetReservationById(resId);
                                         if (existingRes != null)
                                         {
                                             Console.Write("New Start Date (yyyy-MM-dd): ");
-                                            existingRes.StartDate = DateTime.Parse(Console.ReadLine());
+                                            existingRes.StartDate = DateTime.Parse(Console.ReadLine() ?? string.Empty);
                                             Console.Write("New End Date (yyyy-MM-dd): ");
-                                            existingRes.EndDate = DateTime.Parse(Console.ReadLine());
+                                            existingRes.EndDate = DateTime.Parse(Console.ReadLine() ?? string.Empty);
                                             existingRes.TotalCost = (decimal)(existingRes.EndDate - existingRes.StartDate).TotalDays * vehicleService.GetVehicleById(existingRes.VehicleID)?.DailyRate ?? 0;
                                             Console.Write("New Status: ");
                                             existingRes.Status = Console.ReadLine();
@@ -154,7 +178,7 @@ namespace CarConnectApp.Main
 
                                     case "6":
                                         Console.Write("Enter Reservation ID to cancel: ");
-                                        int cancelId = int.Parse(Console.ReadLine());
+                                        int cancelId = int.Parse(Console.ReadLine() ?? string.Empty);
                                         Reservation cancelRes = reservationService.GetReservationById(cancelId);
                                         if (cancelRes != null)
                                         {
@@ -169,7 +193,7 @@ namespace CarConnectApp.Main
 
                                     case "7":
                                         Console.Write("Enter Customer ID to update: ");
-                                        int updateCustomerId = int.Parse(Console.ReadLine());
+                                        int updateCustomerId = int.Parse(Console.ReadLine() ?? string.Empty);
                                         Customer customerToUpdate = customerService.GetCustomerById(updateCustomerId);
                                         if (customerToUpdate != null)
                                         {
@@ -191,7 +215,7 @@ namespace CarConnectApp.Main
 
                                     case "8":
                                         Console.Write("Enter Customer ID: ");
-                                        int custSearchId = int.Parse(Console.ReadLine());
+                                        int custSearchId = int.Parse(Console.ReadLine() ?? string.Empty);
                                         var custById = customerService.GetCustomerById(custSearchId);
                                         if (custById != null)
                                         {
@@ -205,7 +229,7 @@ namespace CarConnectApp.Main
 
                                     case "9":
                                         Console.Write("Enter Username: ");
-                                        string custUsernameSearch = Console.ReadLine();
+                                        string custUsernameSearch = Console.ReadLine() ?? string.Empty;
                                         var custByUsername = customerService.GetCustomerByUserName(custUsernameSearch);
                                         if (custByUsername != null)
                                         {
@@ -219,7 +243,7 @@ namespace CarConnectApp.Main
 
                                     case "10":
                                         Console.Write("Enter Customer ID to delete: ");
-                                        int delCustId = int.Parse(Console.ReadLine());
+                                        int delCustId = int.Parse(Console.ReadLine() ?? string.Empty);
                                         customerService.DeleteCustomer(delCustId);
                                         Console.WriteLine("Customer deleted successfully ....\n");
                                         break;
@@ -239,9 +263,9 @@ namespace CarConnectApp.Main
 
                     case "2":
                         Console.Write("Customer Username: ");
-                        string custUsername = Console.ReadLine();
+                        string custUsername = Console.ReadLine() ?? string.Empty;
                         Console.Write("Customer Password: ");
-                        string custPassword = Console.ReadLine();
+                        string custPassword = Console.ReadLine() ?? string.Empty;
 
                         var customer = authService.AuthenticateCustomer(custUsername, custPassword);
                         if (customer != null)
@@ -257,7 +281,7 @@ namespace CarConnectApp.Main
                                 Console.WriteLine("5. Cancel Reservation");
                                 Console.WriteLine("6. Exit Customer Menu");
                                 Console.Write("Choose option: ");
-                                string custChoice = Console.ReadLine();
+                                string custChoice = Console.ReadLine() ?? string.Empty;
 
                                 switch (custChoice)
                                 {
@@ -281,11 +305,11 @@ namespace CarConnectApp.Main
 
                                     case "3":
                                         Console.Write("Enter Vehicle ID to reserve: ");
-                                        int vehicleId = int.Parse(Console.ReadLine());
+                                        int vehicleId = int.Parse(Console.ReadLine() ?? string.Empty);
                                         Console.Write("Enter Start Date (yyyy-MM-dd): ");
-                                        DateTime start = DateTime.Parse(Console.ReadLine());
+                                        DateTime start = DateTime.Parse(Console.ReadLine() ?? string.Empty);
                                         Console.Write("Enter End Date (yyyy-MM-dd): ");
-                                        DateTime end = DateTime.Parse(Console.ReadLine());
+                                        DateTime end = DateTime.Parse(Console.ReadLine() ?? string.Empty);
                                         decimal vRate = vehicleService.GetVehicleById(vehicleId)?.DailyRate ?? 0;
                                         decimal totalCost = (decimal)(end - start).TotalDays * vRate;
 
@@ -305,14 +329,14 @@ namespace CarConnectApp.Main
 
                                     case "4":
                                         Console.Write("Enter Reservation ID to update: ");
-                                        int cresId = int.Parse(Console.ReadLine());
+                                        int cresId = int.Parse(Console.ReadLine() ?? string.Empty);
                                         Reservation cexistingRes = reservationService.GetReservationById(cresId);
                                         if (cexistingRes != null && cexistingRes.CustomerID == customer.CustomerID)
                                         {
                                             Console.Write("Enter New Start Date (yyyy-MM-dd): ");
-                                            cexistingRes.StartDate = DateTime.Parse(Console.ReadLine());
+                                            cexistingRes.StartDate = DateTime.Parse(Console.ReadLine() ?? string.Empty);
                                             Console.Write("Enter New End Date (yyyy-MM-dd): ");
-                                            cexistingRes.EndDate = DateTime.Parse(Console.ReadLine());
+                                            cexistingRes.EndDate = DateTime.Parse(Console.ReadLine() ?? string.Empty);
                                             cexistingRes.TotalCost = (decimal)(cexistingRes.EndDate - cexistingRes.StartDate).TotalDays * vehicleService.GetVehicleById(cexistingRes.VehicleID)?.DailyRate ?? 0;
                                             Console.Write("Enter New Status: ");
                                             cexistingRes.Status = Console.ReadLine();
@@ -327,7 +351,7 @@ namespace CarConnectApp.Main
 
                                     case "5":
                                         Console.Write("Enter Reservation ID to cancel: ");
-                                        int ccancelId = int.Parse(Console.ReadLine());
+                                        int ccancelId = int.Parse(Console.ReadLine() ?? string.Empty);
                                         Reservation ccancelRes = reservationService.GetReservationById(ccancelId);
                                         if (ccancelRes != null && ccancelRes.CustomerID == customer.CustomerID)
                                         {
@@ -354,14 +378,14 @@ namespace CarConnectApp.Main
 
                     case "3":
                         Console.WriteLine("Enter new customer details:");
-                        Console.Write("Customer ID: "); int custId = int.Parse(Console.ReadLine());
-                        Console.Write("First Name: "); string firstName = Console.ReadLine();
-                        Console.Write("Last Name: "); string lastName = Console.ReadLine();
-                        Console.Write("Email: "); string email = Console.ReadLine();
-                        Console.Write("Phone: "); string phone = Console.ReadLine();
-                        Console.Write("Address: "); string address = Console.ReadLine();
-                        Console.Write("Username: "); string username = Console.ReadLine();
-                        Console.Write("Password: "); string password = Console.ReadLine();
+                        Console.Write("Customer ID: "); int custId = int.Parse(Console.ReadLine() ?? string.Empty);
+                        Console.Write("First Name: "); string firstName = Console.ReadLine() ?? string.Empty;
+                        Console.Write("Last Name: "); string lastName = Console.ReadLine() ?? string.Empty;
+                        Console.Write("Email: "); string email = Console.ReadLine() ?? string.Empty;
+                        Console.Write("Phone: "); string phone = Console.ReadLine() ?? string.Empty;
+                        Console.Write("Address: "); string address = Console.ReadLine() ?? string.Empty;
+                        Console.Write("Username: "); string username = Console.ReadLine() ?? string.Empty;
+                        Console.Write("Password: "); string password = Console.ReadLine() ?? string.Empty;
 
                         Customer newCustomer = new Customer
                         {

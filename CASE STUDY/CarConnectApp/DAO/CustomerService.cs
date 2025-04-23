@@ -142,29 +142,45 @@ namespace CarConnectApp.DAO
         {
             try
             {
-                using (SqlConnection sqlConnection = DBConnUtil.GetConnection("AppSettings.json"))
+                using SqlConnection con = DBConnUtil.GetConnection("AppSettings.json");
+                con.Open();
+
+                string query = @"UPDATE Customer 
+                         SET FirstName = @FirstName, LastName = @LastName, Email = @Email, 
+                             PhoneNumber = @PhoneNumber, Address = @Address, 
+                             Username = @Username, Password = @Password 
+                         WHERE CustomerID = @CustomerID";
+
+                using SqlCommand cmd = new SqlCommand(query, con);
+                cmd.Parameters.AddWithValue("@FirstName", customer.FirstName);
+                cmd.Parameters.AddWithValue("@LastName", customer.LastName);
+                cmd.Parameters.AddWithValue("@Email", customer.Email);
+                cmd.Parameters.AddWithValue("@PhoneNumber", customer.PhoneNumber);
+                cmd.Parameters.AddWithValue("@Address", customer.Address);
+                cmd.Parameters.AddWithValue("@Username", customer.UserName);
+                cmd.Parameters.AddWithValue("@Password", customer.Password);
+                cmd.Parameters.AddWithValue("@CustomerID", customer.CustomerID);
+
+                int rowsAffected = cmd.ExecuteNonQuery();
+
+                if (rowsAffected > 0)
                 {
-                    sqlConnection.Open();
-                    using (SqlCommand cmd = new SqlCommand("UPDATE Customer SET FirstName = @FirstName, LastName = @LastName, Email = @Email, PhoneNumber = @PhoneNumber, Address = @Address, UserName = @UserName, Password = @Password WHERE CustomerID = @CustomerID", sqlConnection))
-                    {
-                        cmd.Parameters.AddWithValue("@CustomerID", customer.CustomerID);
-                        cmd.Parameters.AddWithValue("@FirstName", customer.FirstName);
-                        cmd.Parameters.AddWithValue("@LastName", customer.LastName);
-                        cmd.Parameters.AddWithValue("@Email", customer.Email);
-                        cmd.Parameters.AddWithValue("@PhoneNumber", customer.PhoneNumber);
-                        cmd.Parameters.AddWithValue("@Address", customer.Address);
-                        cmd.Parameters.AddWithValue("@UserName", customer.UserName);
-                        cmd.Parameters.AddWithValue("@Password", customer.Password);
-                        cmd.ExecuteNonQuery();
-                    }
+                    Console.WriteLine("Customer update successful.");
+                    return customer; // Return updated customer
+                }
+                else
+                {
+                    Console.WriteLine("No rows affected.");
+                    return null; //  This leads to your test failing
                 }
             }
             catch (SqlException ex)
             {
-                Console.WriteLine("Error: " + ex.Message);
+                Console.WriteLine("SQL Error: " + ex.Message);
+                return null;
             }
-            return null;
         }
+
         //To Delete Customer
         public Customer DeleteCustomer(int customerID)
         {
